@@ -1,0 +1,2 @@
+# cliMB
+Upravljalec plezalnih centrov
