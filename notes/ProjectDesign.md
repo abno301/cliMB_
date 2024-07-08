@@ -61,7 +61,7 @@ Upravljalec plezalnih centrov/dvoran ter zaposlenih in obiskovalcev (clani)
 
 
 #### Upravljanje posebnih terminov
-**(vodene vadbe, zasedenost dvoran, rojstno dnevne zabave?, druge aktivnosti...)
+(vodene vadbe, zasedenost dvoran, rojstno dnevne zabave?, druge aktivnosti...)
 
 
 #### Obracunavanje stroskov
