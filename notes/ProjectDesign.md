@@ -3,6 +3,18 @@
 Upravljalec plezalnih centrov/dvoran ter zaposlenih in obiskovalcev (clani)
 
 
+## Potek Dela
+1. Narediva diagrame in prototip
+	- use case
+	- komponentni (prikaz povezave storitev v okolju)
+	- figma design prototipa
+2. Vzpostavitev zacetnega razvojnega okolja
+	- V docker povezani service-i -> Angular, Flask, Keycloak, Baza (se nevem kera)
+3. Razvoj programske opreme
+4. Testiranje
+5. Vzpostavitev
+
+
 ### Podatkovna Baza
 
 #### E-R Diagram
@@ -66,7 +78,5 @@ Upravljalec plezalnih centrov/dvoran ter zaposlenih in obiskovalcev (clani)
 - (Custom) Theme
 - OAuth 2.0 (industry-standard protocol for authorization)
 
-
-### Use case diagram
 
 
