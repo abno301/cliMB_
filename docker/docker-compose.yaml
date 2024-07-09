@@ -1,0 +1,11 @@
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: climb-api
+    command: flask run --host=0.0.0.0 --reload
+    ports:
+      - 5000:5000
+    volumes:
+      - ../backend:/app
