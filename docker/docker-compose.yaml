@@ -27,6 +27,7 @@ services:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: keycloak
+      POSTGRES_LOG_LEVEL: ERRORbash
     volumes:
       - type: "volume"
         source: keycloak-flask-db-data
@@ -41,7 +42,7 @@ services:
     environment:
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
-      KEYCLOAK_LOGLEVEL: DEBUG
+      KEYCLOAK_LOGLEVEL: ERROR
       DB_USER: keycloak
       DB_PASSWORD: keycloak
       DB_ADDR: postgres
