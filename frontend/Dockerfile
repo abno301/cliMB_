@@ -1,9 +1,9 @@
-FROM node:20.10.0-bullseye-slim as builder
+FROM node:20.11.1-bullseye-slim as builder
 
 RUN mkdir /project
 WORKDIR /project
 
-RUN npm install -g @angular/cli@17
+RUN npm install -g @angular/cli@18.1.3
 
 COPY package.json package-lock.json ./
 RUN npm ci

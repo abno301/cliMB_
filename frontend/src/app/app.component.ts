@@ -1,15 +1,9 @@
-import {Component} from '@angular/core';
-import {CommonModule, NgOptimizedImage} from '@angular/common';
-import {RouterLink, RouterOutlet} from '@angular/router';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatButtonModule} from "@angular/material/button";
-import {MatIconModule} from "@angular/material/icon";
+import {Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
+import {KeycloakService} from "keycloak-angular";
 
 @Component({
     selector: 'app-root',
-    standalone: true,
-    imports: [CommonModule, RouterOutlet, MatToolbarModule, MatButtonModule, MatIconModule, NgOptimizedImage, RouterLink],
     templateUrl: './app.component.html',
 })
 
@@ -17,6 +11,12 @@ export class AppComponent {
     title = 'cliMB';
 
     constructor(private router: Router) { }
+
+    // ngOnInit() {
+    //     if (this.keycloakService.isLoggedIn()) {
+    //         console.log('User is logged in:');
+    //     }
+    // }
 
     goHome() {
         this.router.navigate(["/"]);
