@@ -1,7 +1,11 @@
-<div class="flex items-center h-20 bg-blue-400 text-white">
+<div class="flex items-center justify-between h-20 bg-blue-400 text-white">
     <a class="flex ml-3 w-10 h-10" routerLink="/" (click)="goHome()">
         <img ngSrc="assets/logo.png" alt="logo" height="28" width="28">
         <div class="ml-4 text-4xl font-bold">cliMB</div>
     </a>
+    <a class="" routerLink="/" (click)="goNakupKart()">Nakup kart</a>
+    <div>
+        <button *ngIf="authService.isLoggedIn()" (click)="logout()">Logout</button>
+    </div>
 </div>
 <router-outlet></router-outlet>
