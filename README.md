@@ -2,13 +2,13 @@
 Upravljalec plezalnih centrov
 
 ## Setup
-**Https**
+**Https**\
 git clone https://jernejhozjan12@bitbucket.org/climb_project/climb.git 
 
-cd /docker
+cd /docker\
 docker compose up --build
 
 
 
-**To run seperately:**
+**To run seperately:**\
 docker compose up frontend
