@@ -11,7 +11,26 @@
           "/index.html",
           "/manifest.webmanifest",
           "/*.css",
-          "/*.js"
+          "/common-es2015.*.js",
+          "/main-es2015.*.js",
+          "/polyfills-es2015.*.js",
+          "/runtime-es2015.*.js",
+          "/vendor-es2015.*.js"
+        ]
+      }
+    },
+    {
+      "name": "modules",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/*-es2015.*.js",
+          "!/common-es2015.*.js",
+          "!/main-es2015.*.js",
+          "!/polyfills-es2015.*.js",
+          "!/runtime-es2015.*.js",
+          "!/vendor-es2015.*.js"
         ]
       }
     },
@@ -22,7 +41,7 @@
       "resources": {
         "files": [
           "/assets/**",
-          "/media/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
+          "/*.(eot|svg|cur|jpg|png|webp|gif|otf|ttf|woff|woff2|ani)"
         ]
       }
     }
