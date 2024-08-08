@@ -1,4 +1,4 @@
-import { NgModule, APP_INITIALIZER } from '@angular/core';
+import { NgModule, APP_INITIALIZER, isDevMode } from '@angular/core';
 import { AppComponent } from './app.component';
 import {KeycloakAngularModule, KeycloakService} from 'keycloak-angular';
 import {CommonModule, NgOptimizedImage} from "@angular/common";
@@ -10,6 +10,7 @@ import {AppRoutingModule} from "./app-routing.module";
 import {HomeComponent} from "./home/home.component";
 import {BrowserModule} from "@angular/platform-browser";
 import {NakupKartComponent} from "./nakup-kart/nakup-kart.component";
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 function initializeKeycloak(keycloak: KeycloakService) {
     return () =>
@@ -43,7 +44,13 @@ function initializeKeycloak(keycloak: KeycloakService) {
         NgOptimizedImage,
         RouterLink,
         AppRoutingModule,
-        KeycloakAngularModule
+        KeycloakAngularModule,
+        ServiceWorkerModule.register('ngsw-worker.js', {
+          enabled: !isDevMode(),
+          // Register the ServiceWorker as soon as the application is stable
+          // or after 30 seconds (whichever comes first).
+          registrationStrategy: 'registerWhenStable:30000'
+        })
     ],
 
     providers: [
