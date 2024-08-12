@@ -11,6 +11,7 @@ import {HomeComponent} from "./home/home.component";
 import {BrowserModule} from "@angular/platform-browser";
 import {NakupKartComponent} from "./nakup-kart/nakup-kart.component";
 import { ServiceWorkerModule } from '@angular/service-worker';
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 
 function initializeKeycloak(keycloak: KeycloakService) {
     return () =>
@@ -45,6 +46,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
         RouterLink,
         AppRoutingModule,
         KeycloakAngularModule,
+        FontAwesomeModule,
         ServiceWorkerModule.register('ngsw-worker.js', {
           enabled: !isDevMode(),
           // Register the ServiceWorker as soon as the application is stable
