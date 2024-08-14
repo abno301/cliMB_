@@ -18,13 +18,11 @@ export class UrnikComponent implements OnInit{
 
   dogodki: Dogodek[] = [];
 
-  constructor(public dialog: MatDialog) {
-    this.generateColors();
-  }
+  constructor(public dialog: MatDialog) {}
 
   ngOnInit(): void {
-    // this.generateColors();
-  }
+    this.generateFixedColors();
+    }
 
   openDialog(vrsta: number, stolpec: number): void {
     const dialogConfig = new MatDialogConfig();
@@ -65,23 +63,14 @@ export class UrnikComponent implements OnInit{
     return test;
   }
 
-
-  getRandomColor(): string {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  }
-
-  generateColors(): void {
-    for (let i = 0; i < this.rows.length; i++) {
-      this.colors[i] = [];
-      for (let j = 0; j < this.cols.length; j++) {
-        this.colors[i][j] = this.getRandomColor();
-      }
-    }
+  generateFixedColors(): void {
+    this.colors = [
+      ['#4DB6AC', '#29B6F6', '#FF8A65', '#FFCC80', '#FFEB3B'],
+      ['#E57373', '#F06292', '#BA68C8', '#9575CD', '#64B5F6'],
+      ['#4DB6AC', '#FF8A65', '#81C784', '#AED581', '#DCE775'],
+      ['#FFCC80', '#FFB74D', '#FFD54F', '#4DB6AC', '#81C784'],
+      ['#9575CD', '#4DB6AC', '#FF8A65', '#F06292', '#FFEB3B']
+    ];
   }
   
 }
