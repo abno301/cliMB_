@@ -2,3 +2,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.custom-dialog-container {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+}
+
+.dialog-content {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+h1 {
+    font-size: 40px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 equal columns */
+    grid-template-rows: repeat(6, minmax(0, 1fr)); /* 6 equal rows */
+    gap: 0.5rem; /* Adjust gap between items as needed */
+}
