@@ -65,12 +65,11 @@ export class UrnikComponent implements OnInit{
 
   generateFixedColors(): void {
     this.colors = [
-      ['#4DB6AC', '#29B6F6', '#FF8A65', '#FFCC80', '#FFEB3B'],
-      ['#E57373', '#F06292', '#BA68C8', '#9575CD', '#64B5F6'],
-      ['#4DB6AC', '#FF8A65', '#81C784', '#AED581', '#DCE775'],
-      ['#FFCC80', '#FFB74D', '#FFD54F', '#4DB6AC', '#81C784'],
-      ['#9575CD', '#4DB6AC', '#FF8A65', '#F06292', '#FFEB3B']
+      ['#4DB6AC', '#29B6F6', '#1E88E5', '#0D47A1', '#42A5F5'],
+      ['#1976D2', '#90CAF9', '#64B5F6', '#1565C0', '#2196F3'],
+      ['#448AFF', '#2979FF', '#2962FF', '#82B1FF', '#4FC3F7'],
+      ['#03A9F4', '#0288D1', '#0277BD', '#01579B', '#80D8FF'],
+      ['#40C4FF', '#00B0FF', '#0091EA', '#81D4FA', '#2196F3']
     ];
   }
-  
 }
