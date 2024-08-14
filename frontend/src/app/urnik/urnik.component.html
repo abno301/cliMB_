@@ -1,0 +1,29 @@
+<div class="w-full text-center">
+  <h1>PLEZALNA ŠOLA ZA OTROKE IN MLADOSTNIKE</h1>
+</div>
+
+<div class="container mx-auto p-4 h-screen w-4/5">
+  <div class="grid grid-cols-5 gap-4 h-full">
+    <!-- Column Headers -->
+    <div class="text-center font-bold">PONEDELJEK</div>
+    <div class="text-center font-bold">TOREK</div>
+    <div class="text-center font-bold">SREDA</div>
+    <div class="text-center font-bold">ČETRTEK</div>
+    <div class="text-center font-bold">PETEK</div>
+
+    <!-- Generate the 5x5 grid -->
+    <ng-container *ngFor="let row of rows; let rowIndex = index">
+      <ng-container *ngFor="let col of cols; let colIndex = index">
+        <div
+          [ngStyle]="{'background-color': colors[rowIndex][colIndex]}"
+          class="text-white p-2 flex items-stretch cursor-pointer"
+          (click)="openDialog(rowIndex + 1, colIndex + 1)"
+        >
+          <ng-container *ngIf="najdiDogodek(rowIndex + 1, colIndex + 1) as dogodek">
+            {{ dogodek.ime }} - {{ dogodek.ura }}
+          </ng-container>        
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>

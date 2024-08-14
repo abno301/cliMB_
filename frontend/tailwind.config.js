@@ -4,15 +4,15 @@ module.exports = {
     "./src/**/*.{html,ts}",
   ],
   theme: {
-    colors: {
-      primary: {
-        DEFAULT: "rgb(17, 148, 190)",
-        light: "rgb(17, 148, 190, 0.5)"
+    extend: {
+      colors: {
+        primary: {
+          DEFAULT: "rgb(17, 148, 190)",
+          light: "rgba(17, 148, 190, 0.5)"
+        },
+        accent: "#2e2e2e"
       },
-      accent: "#2e2e2e"
     },
-    extend: {},
   },
   plugins: [],
 }
-

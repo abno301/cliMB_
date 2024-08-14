@@ -20,8 +20,13 @@ export class AppComponent implements OnInit {
     goHome() {
         this.router.navigate(["/"]);
     }
+
     goNakupKart() {
         this.router.navigate(["/nakup-kart"]);
+    }
+
+    goUrnik() {
+        this.router.navigate(["/urnik"]);
     }
 
     logout() {

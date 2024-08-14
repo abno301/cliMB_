@@ -12,6 +12,12 @@ import {BrowserModule} from "@angular/platform-browser";
 import {NakupKartComponent} from "./nakup-kart/nakup-kart.component";
 import { ServiceWorkerModule } from '@angular/service-worker';
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import { UrnikComponent } from './urnik/urnik.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { DodajDogodekComponent } from './urnik/dodaj-dogodek/dodaj-dogodek.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms'; 
 
 function initializeKeycloak(keycloak: KeycloakService) {
     return () =>
@@ -33,7 +39,9 @@ function initializeKeycloak(keycloak: KeycloakService) {
     declarations: [
         AppComponent,
         HomeComponent,
-        NakupKartComponent
+        NakupKartComponent,
+        UrnikComponent,
+        DodajDogodekComponent,
     ],
     imports: [
         BrowserModule,
@@ -47,6 +55,10 @@ function initializeKeycloak(keycloak: KeycloakService) {
         AppRoutingModule,
         KeycloakAngularModule,
         FontAwesomeModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        FormsModule,
         ServiceWorkerModule.register('ngsw-worker.js', {
           enabled: !isDevMode(),
           // Register the ServiceWorker as soon as the application is stable
