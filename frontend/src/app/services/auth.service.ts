@@ -9,11 +9,10 @@ import {ApiService} from "./api.service";
 export class AuthService {
     private loggedIn = false;
 
-    private trenutni_uporabnik: Uporabnik;
+    public trenutni_uporabnik: Uporabnik;
 
     constructor(private keycloakService: KeycloakService, private apiService: ApiService) {
         this.checkLoginStatus();
-
     }
 
     getToken(): any {
@@ -26,12 +25,11 @@ export class AuthService {
            await this.keycloakService.loadUserProfile();
            this.apiService.getCurrentUser(this.keycloakService.getUsername()).subscribe({
                next: user => {
-                   console.log(user);
                    this.trenutni_uporabnik = {
                        email: user.email,
                        role: user.role
                    };
-                   console.log("User is logged in: ", this.trenutni_uporabnik);
+                   console.log("User is logged in: ", this.trenutni_uporabnik.email);
                },
                error: err => this.trenutni_uporabnik = {email: "", role: ""}
            })

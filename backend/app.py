@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from pymongo.mongo_client import MongoClient
 import requests
@@ -24,7 +24,6 @@ except Exception as e:
 
 @app.route('/check-users', methods=['GET'])
 def register_user():
-    print("in register user backend")
     token = get_keycloak_admin_token()
     url = f"{KEYCLOAK_SERVER}/admin/realms/flask-demo/users"
     headers = {'Authorization': f'Bearer {token}'}
@@ -32,7 +31,6 @@ def register_user():
     response = requests.get(url, headers=headers)
     response.raise_for_status()
     users_keycloak = response.json()
-    print(users_keycloak)
 
     users_db = db['users']
 
@@ -55,10 +53,9 @@ def register_user():
     return jsonify(users_to_return), 200
 
 @app.route('/get-users')
-def example():
+def get_users():
     data = list(db.users.find())
 
-    # Optionally, remove the ObjectId from the documents (as it is not JSON serializable)
     for doc in data:
         doc['_id'] = str(doc['_id'])
 
@@ -73,6 +70,36 @@ def get_user(username):
         return jsonify({"error": "User not found"}), 404
 
     return jsonify(user)
+
+
+@app.route('/urnik', methods=['GET'])
+def get_urnik():
+    urnik_doc = db['urnik']
+
+    urnik = urnik_doc.find_one()
+
+    if urnik is None:
+        return jsonify({"message": "No urnik found"}), 404
+
+    dogodki = urnik.get('dogodki', [])
+
+    return jsonify(dogodki), 200
+
+@app.route('/urnik', methods=['PUT'])
+def update_urnik():
+    try:
+        dogodki = request.json
+
+        urnik_doc = db['urnik']
+
+        result = urnik_doc.replace_one({}, {"dogodki": dogodki}, upsert=True)
+
+
+        return jsonify({"message": "Schedule updated successfully"}), 200
+
+    except Exception as e:
+        print(f"Error while updating schedule: {e}", flush=True)
+        return jsonify({"error": "An error occurred while updating the schedule"}), 500
 
 
 def get_keycloak_admin_token():

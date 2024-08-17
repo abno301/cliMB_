@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
     ngOnInit() {
         this.authService.checkLoginStatus();
         this.apiService.checkUsers().subscribe({
-            next: (data) => console.log('User data:', data),
+            next: (_) => console.log('Checking if users are up to date...'),
             error: err => console.log("Error while checking users", err)
         });
     }
