@@ -1,3 +1,4 @@
 flask
 flask-oidc
 flask-cors
+pymongo==4.3.3

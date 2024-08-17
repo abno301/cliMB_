@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import {MatIconModule} from "@angular/material/icon";
-import { DodajDogodekComponent } from './dodaj-dogodek/dodaj-dogodek.component';
-import { Dogodek } from '../shared/models';
+import {Component, OnInit} from '@angular/core';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import {DodajDogodekComponent} from './dodaj-dogodek/dodaj-dogodek.component';
+import {Dogodek} from '../shared/models';
+import {AuthService} from "../services/auth.service";
+import {ApiService} from "../services/api.service";
 
 @Component({
   selector: 'urnik',
@@ -18,11 +18,28 @@ export class UrnikComponent implements OnInit{
 
   dogodki: Dogodek[] = [];
 
-  constructor(public dialog: MatDialog) {}
+  jeZaposlen: boolean = false;
+
+  constructor(public dialog: MatDialog,
+              private apiService: ApiService,
+              protected authService: AuthService) {}
 
   ngOnInit(): void {
     this.generateFixedColors();
+    if (this.authService.trenutni_uporabnik) {
+      this.jeZaposlen = this.authService.trenutni_uporabnik.role == "zaposlen";
     }
+
+    this.apiService.getUrnik().subscribe({
+      next: dogodki => {
+        console.log("Getting dogodki...");
+        console.log(dogodki);
+        if (dogodki) {
+          this.dogodki = dogodki;
+        }
+      }
+    });
+  }
 
   openDialog(vrsta: number, stolpec: number): void {
     const dialogConfig = new MatDialogConfig();
@@ -44,23 +61,29 @@ export class UrnikComponent implements OnInit{
         let dogodek: Dogodek = {
           ime: result.ime,
           ura: result.ura,
-          tip: "otroci",
           vrsta: result.vrsta,
           stolpec: result.stolpec
         }
-        this.dogodki.push(dogodek);
-        console.log('Result:', result);
+        const existingIndex = this.dogodki.findIndex(d => d.vrsta === dogodek.vrsta && d.stolpec === dogodek.stolpec);
+
+        if (existingIndex !== -1) {
+          this.dogodki[existingIndex] = dogodek;
+        } else {
+          this.dogodki.push(dogodek);
+        }
+        console.log(this.dogodki);
+        this.apiService.updateUrnik(this.dogodki).subscribe({
+          next: response => console.log(response),
+          error: err => console.log("Error while updating schedule: ", err)
+        });
+
       }
     });
   }
 
 
   najdiDogodek(vrsta: number, stolpec: number): Dogodek | undefined {
-    
-    let test = this.dogodki.find(dogodek => dogodek.vrsta === vrsta && dogodek.stolpec === stolpec);
-    console.log("test: ", test);
-    console.log("vsi dogodki: ", this.dogodki);
-    return test;
+    return this.dogodki.find(dogodek => dogodek.vrsta === vrsta && dogodek.stolpec === stolpec);
   }
 
   generateFixedColors(): void {

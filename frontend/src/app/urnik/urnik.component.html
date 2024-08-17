@@ -17,7 +17,8 @@
         <div
           [ngStyle]="{'background-color': colors[rowIndex][colIndex]}"
           class="text-white p-2 cursor-pointer overflow-hidden"
-          (click)="openDialog(rowIndex + 1, colIndex + 1)"
+          [class.cursor-pointer]="jeZaposlen"
+          (click)="jeZaposlen ? openDialog(rowIndex + 1, colIndex + 1) : null"
         >
           <div *ngIf="najdiDogodek(rowIndex + 1, colIndex + 1) as dogodek" class="flex flex-col text-center">
             <span>{{ dogodek.ime }}</span>
