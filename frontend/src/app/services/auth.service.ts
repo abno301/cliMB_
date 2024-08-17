@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { KeycloakService } from 'keycloak-angular';
+import {Uporabnik} from "../shared/models";
+import {ApiService} from "./api.service";
 
 @Injectable({
     providedIn: 'root'
@@ -7,8 +9,11 @@ import { KeycloakService } from 'keycloak-angular';
 export class AuthService {
     private loggedIn = false;
 
-    constructor(private keycloakService: KeycloakService) {
+    private trenutni_uporabnik: Uporabnik;
+
+    constructor(private keycloakService: KeycloakService, private apiService: ApiService) {
         this.checkLoginStatus();
+
     }
 
     getToken(): any {
@@ -17,7 +22,20 @@ export class AuthService {
 
     async checkLoginStatus() {
         this.loggedIn = this.keycloakService.isLoggedIn();
-        console.log("User is logged in: ", this.loggedIn);
+        if (this.loggedIn) {
+           await this.keycloakService.loadUserProfile();
+           this.apiService.getCurrentUser(this.keycloakService.getUsername()).subscribe({
+               next: user => {
+                   console.log(user);
+                   this.trenutni_uporabnik = {
+                       email: user.email,
+                       role: user.role
+                   };
+                   console.log("User is logged in: ", this.trenutni_uporabnik);
+               },
+               error: err => this.trenutni_uporabnik = {email: "", role: ""}
+           })
+        } else { this.trenutni_uporabnik = {email: "", role: ""}}
     }
 
     isLoggedIn(): boolean {

@@ -13,7 +13,10 @@ export class ApiService {
     }
 
     checkUsers(): Observable<any> {
-        console.log("in api users :#");
         return this.http.get<any>(`${this.apiUrl}/check-users`);
+    }
+
+    getCurrentUser(username: string): Observable<any> {
+        return this.http.get<any>(`${this.apiUrl}/get-user/${username}`);
     }
 }

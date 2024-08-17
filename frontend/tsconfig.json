@@ -3,6 +3,7 @@
   "compileOnSave": true,
   "compilerOptions": {
     "outDir": "./dist/out-tsc",
+    "strictPropertyInitialization": false,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitOverride": true,

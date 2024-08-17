@@ -5,3 +5,8 @@ export interface Dogodek {
     vrsta: number,
     stolpec: number
 }
+
+export interface Uporabnik {
+    email: string,
+    role: string
+}

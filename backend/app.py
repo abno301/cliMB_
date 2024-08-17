@@ -64,6 +64,16 @@ def example():
 
     return jsonify(data)
 
+@app.route('/get-user/<username>', methods=['GET'])
+def get_user(username):
+    users_db = db['users']
+    user = users_db.find_one({"email": username}, {"_id": 0, "email": 1, "role": 1})
+
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    return jsonify(user)
+
 
 def get_keycloak_admin_token():
     url = f"{KEYCLOAK_SERVER}/realms/{REALM_NAME}/protocol/openid-connect/token"
@@ -77,5 +87,4 @@ def get_keycloak_admin_token():
 
     response = requests.post(url, data=payload, headers=headers)
     response.raise_for_status()
-    print(response.json())
     return response.json()['access_token']
