@@ -17,7 +17,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { DodajDogodekComponent } from './urnik/dodaj-dogodek/dodaj-dogodek.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule } from '@angular/forms';
+import {HttpClientModule} from "@angular/common/http";
 
 function initializeKeycloak(keycloak: KeycloakService) {
     return () =>
@@ -59,6 +60,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
         MatFormFieldModule,
         MatInputModule,
         FormsModule,
+        HttpClientModule,
         ServiceWorkerModule.register('ngsw-worker.js', {
           enabled: !isDevMode(),
           // Register the ServiceWorker as soon as the application is stable

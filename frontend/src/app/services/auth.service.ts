@@ -11,6 +11,10 @@ export class AuthService {
         this.checkLoginStatus();
     }
 
+    getToken(): any {
+        return this.keycloakService.getToken();
+    }
+
     async checkLoginStatus() {
         this.loggedIn = this.keycloakService.isLoggedIn();
         console.log("User is logged in: ", this.loggedIn);
