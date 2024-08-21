@@ -31,4 +31,11 @@ export class ApiService {
             dogodki
         );
     }
+
+    uploadPicture(pictureData: any): Observable<any> {
+        return this.http.post<any>(
+            `${this.apiUrl}/upload-picture`,
+            pictureData
+        );
+    }
 }

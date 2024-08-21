@@ -2,12 +2,15 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from pymongo.mongo_client import MongoClient
 import requests
+import gridfs
+from bson.objectid import ObjectId
 
 app = Flask(__name__)
 CORS(app)
 uri = "mongodb://jernej:FA5Ccw1lHpTTyDy@climb-shard-00-00.6ikge.mongodb.net:27017,climb-shard-00-01.6ikge.mongodb.net:27017,climb-shard-00-02.6ikge.mongodb.net:27017/?ssl=true&replicaSet=atlas-s7hxmc-shard-0&authSource=admin&retryWrites=true&w=majority&appName=cliMB"
 client = MongoClient(uri)
 db = client['cliMB']
+fs = gridfs.GridFS(db)
 
 KEYCLOAK_SERVER = "http://keycloak:8080/auth"
 REALM_NAME = "master"
@@ -100,6 +103,23 @@ def update_urnik():
     except Exception as e:
         print(f"Error while updating schedule: {e}", flush=True)
         return jsonify({"error": "An error occurred while updating the schedule"}), 500
+
+
+@app.route('/upload-picture', methods=['POST'])
+def upload_picture():
+    if 'image' not in request.files or 'username' not in request.form:
+        return jsonify({"error": "Image file or username is missing"}), 400
+
+    file = request.files['image']
+    username = request.form['username']
+
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+
+    # Store the file in GridFS with additional metadata
+    file_id = fs.put(file, filename=file.filename, metadata={"username": username})
+
+    return jsonify({"message": "Image successfully uploaded!", "file_id": str(file_id)}), 200
 
 
 def get_keycloak_admin_token():
