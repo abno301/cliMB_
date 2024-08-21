@@ -105,22 +105,39 @@ def update_urnik():
         return jsonify({"error": "An error occurred while updating the schedule"}), 500
 
 
-@app.route('/upload-picture', methods=['POST'])
+@app.route('/picture', methods=['POST'])
 def upload_picture():
-    if 'image' not in request.files or 'username' not in request.form:
-        return jsonify({"error": "Image file or username is missing"}), 400
-
     file = request.files['image']
     username = request.form['username']
+
+    existing_file = db['fs.files'].find_one({'metadata.username': username})
+
+    if existing_file:
+        fs.delete(existing_file['_id'])
+
+    if 'image' not in request.files or 'username' not in request.form:
+        return jsonify({"error": "Image file or username is missing"}), 400
 
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
 
-    # Store the file in GridFS with additional metadata
     file_id = fs.put(file, filename=file.filename, metadata={"username": username})
 
     return jsonify({"message": "Image successfully uploaded!", "file_id": str(file_id)}), 200
 
+
+@app.route('/picture/<username>', methods=['GET'])
+def get_picture_by_username(username):
+    try:
+        file = fs.find_one({"metadata.username": username})
+        if file:
+            image_data = file.read()
+            encoded_image = base64.b64encode(image_data).decode('utf-8')
+            return jsonify({"image": encoded_image}), 200
+        else:
+            return jsonify({"error": "No image found for this user"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 def get_keycloak_admin_token():
     url = f"{KEYCLOAK_SERVER}/realms/{REALM_NAME}/protocol/openid-connect/token"

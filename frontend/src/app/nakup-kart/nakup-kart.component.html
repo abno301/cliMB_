@@ -33,6 +33,14 @@
         </mat-card>
     </div>
 
+    <div *ngIf="userImageUrl; else noImage">
+        <img [src]="userImageUrl" alt="User Image" />
+    </div>
+
+    <ng-template #noImage>
+        <p>No image found for the user.</p>
+    </ng-template>
+
     <mat-divider></mat-divider>
 
     <h2>Cenik vstopnic</h2>

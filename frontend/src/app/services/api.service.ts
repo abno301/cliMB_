@@ -34,8 +34,12 @@ export class ApiService {
 
     uploadPicture(pictureData: any): Observable<any> {
         return this.http.post<any>(
-            `${this.apiUrl}/upload-picture`,
+            `${this.apiUrl}/picture`,
             pictureData
         );
+    }
+
+    getUserPicture(username: string): Observable<any> {
+        return this.http.get(`${this.apiUrl}/picture/${username}`);
     }
 }
