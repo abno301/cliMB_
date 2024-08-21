@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders  } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {Dogodek} from "../shared/models";
 
@@ -30,5 +30,16 @@ export class ApiService {
             `${this.apiUrl}/urnik`,
             dogodki
         );
+    }
+
+    uploadPicture(pictureData: any): Observable<any> {
+        return this.http.post<any>(
+            `${this.apiUrl}/picture`,
+            pictureData
+        );
+    }
+
+    getUserPicture(): Observable<any> {
+        return this.http.get(`${this.apiUrl}/picture`, { responseType: 'blob'});
     }
 }
