@@ -1,9 +1,10 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 from pymongo.mongo_client import MongoClient
 import requests
 import gridfs
 from bson.objectid import ObjectId
+import jwt
 
 app = Flask(__name__)
 CORS(app)
@@ -126,18 +127,35 @@ def upload_picture():
     return jsonify({"message": "Image successfully uploaded!", "file_id": str(file_id)}), 200
 
 
-@app.route('/picture/<username>', methods=['GET'])
-def get_picture_by_username(username):
+@app.route('/picture', methods=['GET'])
+def get_picture_by_username():
+    auth_header = request.headers.get('Authorization')
+    if auth_header is None or not auth_header.startswith("Bearer "):
+        return jsonify({"error": "Authorization header is missing or invalid"}), 401
+
+    token = auth_header.split(" ")[1]
+
+    public_key = """
+    -----BEGIN PUBLIC KEY-----
+    MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlCCO1wOBQuD4A1Ugg77akF2Htij6SqX88oDU5dLy6/1c9EiT9o/wmFQ7k51itskkZX4jQ+uQtfcKEUcFK9hO5owVObTKalh80lkb32Hsb35GdtNWeGuZbZ9Fcd3qp/eftUsVC3wpirlwA0XZXTqi9QDiHvGl25xbcTiAzv8DcEFJ6v14XaoXOTzGI+LK2FG1IH10ClWkDo7W3dtocwIzQ8Kni3siyyut0bix66oJnyNfEIO1cMgGRNuLNIElPNMIUO1HW/DCJH5yrHfWazQoPEqe6wx96DMAG9UfW535c4HpFuXORi3lYxWUC47CROt4fkyI0jGQVIp0+IKuwtiG3wIDAQAB
+    -----END PUBLIC KEY-----
+    """
+
     try:
+        decoded_token = jwt.decode(token, public_key, algorithms=["RS256"], options={"verify_signature": False})
+        username = decoded_token.get('preferred_username')
+
         file = fs.find_one({"metadata.username": username})
+
         if file:
-            image_data = file.read()
-            encoded_image = base64.b64encode(image_data).decode('utf-8')
-            return jsonify({"image": encoded_image}), 200
+            return send_file(file, mimetype='image/jpeg', as_attachment=False)
         else:
-            return jsonify({"error": "No image found for this user"}), 404
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+            return jsonify({"error": "Image not found"}), 404
+
+    except jwt.ExpiredSignatureError:
+        return jsonify({"error": "Token has expired"}), 401
+    except jwt.InvalidTokenError:
+        return jsonify({"error": "Invalid token"}), 401
 
 def get_keycloak_admin_token():
     url = f"{KEYCLOAK_SERVER}/realms/{REALM_NAME}/protocol/openid-connect/token"

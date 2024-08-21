@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ApiService} from "../services/api.service";
 import {AuthService} from "../services/auth.service";
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import {SafeUrl} from '@angular/platform-browser';
 
 @Component({
     selector: 'nakup-kart',
@@ -18,15 +18,12 @@ export class NakupKartComponent implements OnInit {
     constructor(
         private apiService: ApiService,
         private authService: AuthService,
-        private domSanitizer: DomSanitizer
     ) {}
 
     ngOnInit(): void {
-        this.apiService.getUserPicture(this.authService.getToken()).subscribe({
-            next: (data) => {
-                if (data.length > 0) {
-                    this.userImageUrl = this.domSanitizer.bypassSecurityTrustUrl(`data:image/jpeg;base64,${data[0].file_id}`);
-                }
+        this.apiService.getUserPicture().subscribe({
+            next: (blob) => {
+                this.userImageUrl = URL.createObjectURL(blob);
             },
             error: (error) => {
                 console.error('Error fetching image:', error);

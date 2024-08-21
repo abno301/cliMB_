@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders  } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {Dogodek} from "../shared/models";
 
@@ -39,7 +39,7 @@ export class ApiService {
         );
     }
 
-    getUserPicture(username: string): Observable<any> {
-        return this.http.get(`${this.apiUrl}/picture/${username}`);
+    getUserPicture(): Observable<any> {
+        return this.http.get(`${this.apiUrl}/picture`, { responseType: 'blob'});
     }
 }
