@@ -17,11 +17,14 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { DodajDogodekComponent } from './urnik/dodaj-dogodek/dodaj-dogodek.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from "@angular/common/http";
 import {MatCardModule} from "@angular/material/card";
 import {MatDividerModule} from "@angular/material/divider";
 import {MatTableModule} from "@angular/material/table";
+import {NgxStripeModule} from "ngx-stripe";
+import {PaymentForm} from "./nakup-kart/payment-form/payment-form";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 function initializeKeycloak(keycloak: KeycloakService) {
     return () =>
@@ -46,6 +49,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
         NakupKartComponent,
         UrnikComponent,
         DodajDogodekComponent,
+        PaymentForm
     ],
     imports: [
         BrowserModule,
@@ -70,11 +74,13 @@ function initializeKeycloak(keycloak: KeycloakService) {
             // or after 30 seconds (whichever comes first).
             registrationStrategy: 'registerWhenStable:30000'
         }),
+        NgxStripeModule.forRoot('pk_test_51PqU9fJQdsxzu2zOEIU2a3J8IC7xGvCCa5VzCNy6OedV7j4jWGhRTkIzUR126BvA5MSdenMKIWDPXjH3yDJLJp4M00ZpI4TY5v'),
         MatCardModule,
         MatDividerModule,
-        MatTableModule
+        MatTableModule,
+        ReactiveFormsModule,
+        BrowserAnimationsModule
     ],
-
     providers: [
         {
             provide: APP_INITIALIZER,
@@ -83,6 +89,6 @@ function initializeKeycloak(keycloak: KeycloakService) {
             deps: [KeycloakService]
         }
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent, PaymentForm]
 })
 export class AppModule { }
