@@ -16,3 +16,9 @@
 
 # Visual Studio Code
 /.vscode
+
+# Ignore Python cache files
+backend/__pycache__/
+
+# Ignore Angular files
+.angular/

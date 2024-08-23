@@ -47,6 +47,7 @@
 
     <div class="cenik">
         <button mat-raised-button color="accent">Podrobnosti cenika</button>
+        <button mat-button (click)="openPayment()" color="primary">Nakup karte</button>
         <table mat-table [dataSource]="tickets" class="mat-elevation-z8">
             <ng-container matColumnDef="vstopnica">
                 <th mat-header-cell *matHeaderCellDef> VSTOPNICA </th>

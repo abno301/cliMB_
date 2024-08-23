@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {ApiService} from "../services/api.service";
 import {AuthService} from "../services/auth.service";
 import {SafeUrl} from '@angular/platform-browser';
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {PaymentForm} from "./payment-form/payment-form";
 
 @Component({
     selector: 'nakup-kart',
@@ -18,6 +20,7 @@ export class NakupKartComponent implements OnInit {
     constructor(
         private apiService: ApiService,
         private authService: AuthService,
+        public dialog: MatDialog,
     ) {}
 
     ngOnInit(): void {
@@ -57,6 +60,21 @@ export class NakupKartComponent implements OnInit {
         this.apiService.uploadPicture(formData).subscribe({
             next: response => console.log('Slika uspešno naložena!', response),
             error: err => console.error('Napaka pri nalaganju slike: ', err),
+        });
+    }
+
+    openPayment(): void {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.data = { email: this.authService.trenutni_uporabnik.email, amount: 1000 }
+
+        const dialogRef = this.dialog.open(PaymentForm, dialogConfig);
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed');
+            if (result) {
+
+            }
         });
     }
 

@@ -5,6 +5,7 @@ import requests
 import gridfs
 from bson.objectid import ObjectId
 import jwt
+import stripe
 
 app = Flask(__name__)
 CORS(app)
@@ -12,6 +13,8 @@ uri = "mongodb://jernej:FA5Ccw1lHpTTyDy@climb-shard-00-00.6ikge.mongodb.net:2701
 client = MongoClient(uri)
 db = client['cliMB']
 fs = gridfs.GridFS(db)
+
+stripe.api_key = 'sk_test_51PqU9fJQdsxzu2zOzhTobaEJrOwcSXhwXyepxANo2HZKf2Cv7Go3ZiXoLWOQEqeha5fWH5SOwUtCU14XXuI59OoD00EzHW6hmY'
 
 KEYCLOAK_SERVER = "http://keycloak:8080/auth"
 REALM_NAME = "master"
@@ -129,21 +132,8 @@ def upload_picture():
 
 @app.route('/picture', methods=['GET'])
 def get_picture_by_username():
-    auth_header = request.headers.get('Authorization')
-    if auth_header is None or not auth_header.startswith("Bearer "):
-        return jsonify({"error": "Authorization header is missing or invalid"}), 401
-
-    token = auth_header.split(" ")[1]
-
-    public_key = """
-    -----BEGIN PUBLIC KEY-----
-    MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlCCO1wOBQuD4A1Ugg77akF2Htij6SqX88oDU5dLy6/1c9EiT9o/wmFQ7k51itskkZX4jQ+uQtfcKEUcFK9hO5owVObTKalh80lkb32Hsb35GdtNWeGuZbZ9Fcd3qp/eftUsVC3wpirlwA0XZXTqi9QDiHvGl25xbcTiAzv8DcEFJ6v14XaoXOTzGI+LK2FG1IH10ClWkDo7W3dtocwIzQ8Kni3siyyut0bix66oJnyNfEIO1cMgGRNuLNIElPNMIUO1HW/DCJH5yrHfWazQoPEqe6wx96DMAG9UfW535c4HpFuXORi3lYxWUC47CROt4fkyI0jGQVIp0+IKuwtiG3wIDAQAB
-    -----END PUBLIC KEY-----
-    """
-
     try:
-        decoded_token = jwt.decode(token, public_key, algorithms=["RS256"], options={"verify_signature": False})
-        username = decoded_token.get('preferred_username')
+        username = get_username_from_access_token(request)
 
         file = fs.find_one({"metadata.username": username})
 
@@ -156,6 +146,41 @@ def get_picture_by_username():
         return jsonify({"error": "Token has expired"}), 401
     except jwt.InvalidTokenError:
         return jsonify({"error": "Invalid token"}), 401
+
+
+@app.route('/create-payment-intent', methods=['POST'])
+def create_payment_intent():
+    try:
+        data = request.get_json()
+        amount = data.get('amount')
+
+        username = get_username_from_access_token(request)
+
+        users_collection = db['users']
+        user = users_collection.find_one({"email": username})
+
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        users_collection.update_one(
+            {"email": username},
+            {"$inc": {"odrasli_celodnevna_karta": 1}}
+        )
+
+
+        payment_intent = stripe.PaymentIntent.create(
+            amount=int(amount),  # Amount is in cents BTW
+            currency='eur',
+            payment_method_types=['card'],
+            metadata={'integration_check': 'accept_a_payment'}
+        )
+
+        return jsonify({
+            'client_secret': payment_intent['client_secret']
+        }), 200
+
+    except Exception as e:
+        return jsonify(error=str(e)), 403
 
 def get_keycloak_admin_token():
     url = f"{KEYCLOAK_SERVER}/realms/{REALM_NAME}/protocol/openid-connect/token"
@@ -170,3 +195,25 @@ def get_keycloak_admin_token():
     response = requests.post(url, data=payload, headers=headers)
     response.raise_for_status()
     return response.json()['access_token']
+
+def get_username_from_access_token(requestData):
+        auth_header = requestData.headers.get('Authorization')
+        if auth_header is None or not auth_header.startswith("Bearer "):
+            return jsonify({"error": "Authorization header is missing or invalid"}), 401
+
+        token = auth_header.split(" ")[1]
+
+        public_key = """
+        -----BEGIN PUBLIC KEY-----
+        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlCCO1wOBQuD4A1Ugg77akF2Htij6SqX88oDU5dLy6/1c9EiT9o/wmFQ7k51itskkZX4jQ+uQtfcKEUcFK9hO5owVObTKalh80lkb32Hsb35GdtNWeGuZbZ9Fcd3qp/eftUsVC3wpirlwA0XZXTqi9QDiHvGl25xbcTiAzv8DcEFJ6v14XaoXOTzGI+LK2FG1IH10ClWkDo7W3dtocwIzQ8Kni3siyyut0bix66oJnyNfEIO1cMgGRNuLNIElPNMIUO1HW/DCJH5yrHfWazQoPEqe6wx96DMAG9UfW535c4HpFuXORi3lYxWUC47CROt4fkyI0jGQVIp0+IKuwtiG3wIDAQAB
+        -----END PUBLIC KEY-----
+        """
+
+        try:
+            decoded_token = jwt.decode(token, public_key, algorithms=["RS256"], options={"verify_signature": False})
+            return decoded_token.get('preferred_username')
+
+        except jwt.ExpiredSignatureError:
+            raise Exception("Token has expired")
+        except jwt.InvalidTokenError:
+            raise Exception("Invalid token")
