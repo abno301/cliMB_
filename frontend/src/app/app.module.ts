@@ -25,6 +25,7 @@ import {MatTableModule} from "@angular/material/table";
 import {NgxStripeModule} from "ngx-stripe";
 import {PaymentForm} from "./nakup-kart/payment-form/payment-form";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 function initializeKeycloak(keycloak: KeycloakService) {
     return () =>
@@ -79,7 +80,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
         MatDividerModule,
         MatTableModule,
         ReactiveFormsModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        MatProgressSpinnerModule
     ],
     providers: [
         {

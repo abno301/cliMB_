@@ -1,15 +1,57 @@
-<h2>Card Example</h2>
-<div [formGroup]="stripeTest">
-    <mat-form-field class="example-full-width" appearance="fill">
-        <input matInput placeholder="name" formControlName="name" />
-    </mat-form-field>
-    <mat-form-field class="example-full-width" appearance="fill">
-        <input matInput placeholder="Email" type="email" formControlName="email" />
-    </mat-form-field>
-    <ngx-stripe-elements [elementsOptions]="elementsOptions">
-        <ngx-stripe-card [options]="cardOptions" />
-    </ngx-stripe-elements>
+<div class="relative">
+    <div ngxStripeCardGroup
+         [formGroup]="stripeTest"
+         [elementsOptions]="elementsOptions"
+         class="max-w-sm mx-auto bg-white p-6 px-10 rounded-lg shadow-md">
+        <h2 class="text-2xl font-semibold mb-4 text-center">Nakup Enodnevne Karte</h2>
+
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700" for="email">Email</label>
+            <input class="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" formControlName="email" readonly type="email"/>
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700" for="name">Polno Ime</label>
+            <input class="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" formControlName="name" placeholder="Vnesite vaše polno ime" />
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Credit Card</label>
+            <div class="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                <ngx-stripe-card-number [options]="cardOptions"></ngx-stripe-card-number>
+            </div>
+        </div>
+
+        <div class="flex space-x-4 mb-4">
+            <div class="flex-1">
+                <label class="block text-sm font-medium text-gray-700">Expiry</label>
+                <div class="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <ngx-stripe-card-expiry [options]="cardOptions"></ngx-stripe-card-expiry>
+                </div>
+            </div>
+
+            <div class="flex-1">
+                <label class="block text-sm font-medium text-gray-700">CVC</label>
+                <div class="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <ngx-stripe-card-cvc [options]="cardOptions"></ngx-stripe-card-cvc>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" (click)="pay()" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            PLAČAJ 10€
+        </button>
+    </div>
+
+    <!-- Overlay Spinner (initially hidden) -->
+    <div *ngIf="isLoading" class="absolute inset-0 bg-white bg-opacity-75 flex justify-center items-center">
+        <mat-spinner class="w-20 h-20"></mat-spinner>
+    </div>
+
+<!--    <div *ngIf="isSuccess" class="absolute inset-0 bg-white bg-opacity-75 flex justify-center items-center">-->
+<!--        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">-->
+<!--            <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />-->
+<!--            <path class="checkmark__check" fill="none" d="M14 27l10 10L38 18" />-->
+<!--        </svg>-->
+<!--    </div>-->
 </div>
-<button type="submit" (click)="createToken()">
-    CREATE TOKEN
-</button>

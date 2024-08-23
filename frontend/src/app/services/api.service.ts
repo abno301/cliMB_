@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders  } from '@angular/common/http';
+import { HttpClient  } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {Dogodek} from "../shared/models";
+import {PaymentIntent} from "@stripe/stripe-js";
 
 @Injectable({
     providedIn: 'root'
@@ -41,5 +42,12 @@ export class ApiService {
 
     getUserPicture(): Observable<any> {
         return this.http.get(`${this.apiUrl}/picture`, { responseType: 'blob'});
+    }
+
+    createPaymentIntent(amount: number): Observable<PaymentIntent> {
+        return this.http.post<PaymentIntent>(
+            `${this.apiUrl}/create-payment-intent`,
+            { amount }
+        );
     }
 }

@@ -66,7 +66,9 @@ export class NakupKartComponent implements OnInit {
     openPayment(): void {
         const dialogConfig = new MatDialogConfig();
 
-        const dialogRef = this.dialog.open(PaymentForm);
+        dialogConfig.data = { email: this.authService.trenutni_uporabnik.email, amount: 1000 }
+
+        const dialogRef = this.dialog.open(PaymentForm, dialogConfig);
 
         dialogRef.afterClosed().subscribe(result => {
             console.log('The dialog was closed');

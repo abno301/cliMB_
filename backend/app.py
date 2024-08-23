@@ -5,6 +5,7 @@ import requests
 import gridfs
 from bson.objectid import ObjectId
 import jwt
+import stripe
 
 app = Flask(__name__)
 CORS(app)
@@ -12,6 +13,8 @@ uri = "mongodb://jernej:FA5Ccw1lHpTTyDy@climb-shard-00-00.6ikge.mongodb.net:2701
 client = MongoClient(uri)
 db = client['cliMB']
 fs = gridfs.GridFS(db)
+
+stripe.api_key = 'sk_test_51PqU9fJQdsxzu2zOzhTobaEJrOwcSXhwXyepxANo2HZKf2Cv7Go3ZiXoLWOQEqeha5fWH5SOwUtCU14XXuI59OoD00EzHW6hmY'
 
 KEYCLOAK_SERVER = "http://keycloak:8080/auth"
 REALM_NAME = "master"
@@ -156,6 +159,27 @@ def get_picture_by_username():
         return jsonify({"error": "Token has expired"}), 401
     except jwt.InvalidTokenError:
         return jsonify({"error": "Invalid token"}), 401
+
+
+@app.route('/create-payment-intent', methods=['POST'])
+def create_payment_intent():
+    try:
+        data = request.get_json()
+        amount = data.get('amount')
+
+        payment_intent = stripe.PaymentIntent.create(
+            amount=int(amount),  # Amount should be in cents
+            currency='eur',  # Change this to your desired currency
+            payment_method_types=['card'],
+            metadata={'integration_check': 'accept_a_payment'}
+        )
+
+        return jsonify({
+            'client_secret': payment_intent['client_secret']
+        }), 200
+
+    except Exception as e:
+        return jsonify(error=str(e)), 403
 
 def get_keycloak_admin_token():
     url = f"{KEYCLOAK_SERVER}/realms/{REALM_NAME}/protocol/openid-connect/token"
