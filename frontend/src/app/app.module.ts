@@ -26,6 +26,7 @@ import {NgxStripeModule} from "ngx-stripe";
 import {PaymentForm} from "./nakup-kart/payment-form/payment-form";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {PregledComponent} from "./pregled/pregled.component";
 
 function initializeKeycloak(keycloak: KeycloakService) {
     return () =>
@@ -50,7 +51,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
         NakupKartComponent,
         UrnikComponent,
         DodajDogodekComponent,
-        PaymentForm
+        PaymentForm,
+        PregledComponent
     ],
     imports: [
         BrowserModule,

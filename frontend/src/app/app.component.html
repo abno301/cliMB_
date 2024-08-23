@@ -16,7 +16,7 @@
 
     <div class="flex items-center space-x-4">
 <!--        <a class="hover:underline" href="#">Spletna Stran</a>-->
-        <a class="hover:underline" href="#">Prijava</a>
+        <a *ngIf="!authService.isLoggedIn()" class="hover:underline" href="#">Prijava</a>
         <button *ngIf="authService.isLoggedIn()" class="hover:underline" (click)="logout()">Odjava</button>
     </div>
 </div>

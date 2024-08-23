@@ -19,7 +19,7 @@ h1 {
     font-size: 40px;
 }
 
-.grid {
+.grid-urnik {
     display: grid;
     grid-template-columns: repeat(5, 1fr); /* 5 equal columns */
     grid-template-rows: repeat(6, minmax(0, 1fr)); /* 6 equal rows */
