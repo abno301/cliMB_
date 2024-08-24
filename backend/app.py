@@ -9,6 +9,7 @@ import stripe
 from datetime import datetime
 from io import BytesIO
 import base64
+from flask import url_for
 
 app = Flask(__name__)
 CORS(app)
@@ -216,45 +217,44 @@ def check_in():
 @app.route('/recent-users', methods=['GET'])
 def get_recent_users():
 
-    recent_users_collection = db['recent_users']
+    je_zaposlen = check_je_zaposlen(request)
 
+    if not je_zaposlen:
+        return jsonify({"error": "No permission"}), 401
+
+    recent_users_collection = db['recent_users']
     recent_users = list(recent_users_collection.find({}, {"_id": 0}))
 
-    # Create a list to store users with their images
     users_with_images = []
 
     for user in recent_users:
         username = user.get('username')
 
-        print("Username: ", username, flush=True)
+        # Generate a URL for the user's image
+        image_url = url_for('get_user_image', username=username, _external=True)
 
-        # Find the image for the user in GridFS
-        file = fs.find_one({"metadata.username": username})
+        users_with_images.append({
+            "username": username,
+            "check_in_time": user.get('check_in_time'),
+            "image_url": image_url
+        })
 
-        if file:
-            # Read the image from GridFS
-            image_stream = file.read()
-            image_data = BytesIO(image_stream)
-
-            # Convert image data to a base64 string
-            image_data_base64 = base64.b64encode(image_data.getvalue()).decode('utf-8')
-
-            # Append user data with image
-            users_with_images.append({
-                "username": username,
-                "check_in_time": user.get('check_in_time'),
-                "userImageUrl": image_data_base64
-            })
-        else:
-            # If no image is found, add user data without image
-            users_with_images.append({
-                "username": username,
-                "check_in_time": user.get('check_in_time'),
-                "userImageUrl": None
-            })
-
-    # Return the response
     return jsonify({"recent_users": users_with_images}), 200
+
+@app.route('/user-image/<username>', methods=['GET'])
+def get_user_image(username):
+
+    je_zaposlen = check_je_zaposlen(request)
+
+    if not je_zaposlen:
+        return jsonify({"error": "No permission"}), 401
+
+    file = fs.find_one({"metadata.username": username})
+
+    if file:
+        return send_file(file, mimetype='image/jpeg', as_attachment=False)
+    else:
+        return jsonify({"error": "Image not found"}), 404
 
 
 def get_keycloak_admin_token():
@@ -292,3 +292,18 @@ def get_username_from_access_token(requestData):
             raise Exception("Token has expired")
         except jwt.InvalidTokenError:
             raise Exception("Invalid token")
+
+
+def check_je_zaposlen(request):
+    access_token_username = get_username_from_access_token(request)
+
+    if not access_token_username:
+        return False
+
+    users_collection = db['users']
+    user = users_collection.find_one({"email": access_token_username})
+
+    if 'role' not in user or user['role'] != 'zaposlen':
+        return False
+
+    return True

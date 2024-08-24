@@ -1,14 +1,16 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ApiService} from "../services/api.service";
-import {SafeUrl} from '@angular/platform-browser';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {MatDialog} from "@angular/material/dialog";
-import {interval, Subscription, switchMap} from "rxjs";
+import {forkJoin, interval, map, Subscription, switchMap} from "rxjs";
 import {DatePipe} from "@angular/common";
+import {AuthService} from "../services/auth.service";
 
 export interface RecentUsers {
-    title: string,
-    prihod: string,
-    userImageUrl?: SafeUrl
+    title: string;
+    prihod: string;
+    userImageUrl?: SafeUrl;
+    image_url: string; // Add this to hold the raw image URL for fetching
 }
 
 
@@ -20,41 +22,54 @@ export class PregledComponent implements OnInit, OnDestroy {
 
     private subscription: Subscription;
 
-    userImageUrl: SafeUrl | null = null;
+    jeZaposlen: boolean = false;
 
     users: RecentUsers[] = [];
 
     constructor(
         private apiService: ApiService,
         public dialog: MatDialog,
-        private datePipe: DatePipe
+        private datePipe: DatePipe,
+        private domSanitizer: DomSanitizer
     ) {}
 
     ngOnInit(): void {
-        this.apiService.getUserPicture().subscribe({
-            next: (blob) => {
-                this.userImageUrl = URL.createObjectURL(blob);
-            },
-            error: (error) => {
-                console.error('Error fetching image:', error);
-            }
-        });
 
-        // Schedule the request to be made every 5 seconds using RxJS interval
+        // Dobi vse nedanje uporabnike, ki so porabili karto oz. se check inali.
         this.subscription = interval(5000).pipe(
-            switchMap(() => this.apiService.getRecentUsers()))
-                .subscribe({ next: response => {
-                    this.users = response.recent_users.map((user: { check_in_time: string | number | Date; username: any; userImageUrl: SafeUrl }) =>  {
-                        const formattedDateTime = this.datePipe.transform(user.check_in_time, 'HH:mm MMM dd, yyyy');
+            switchMap(() => this.apiService.getRecentUsers()),
+            switchMap(response => {
+                let usersWithImages: RecentUsers[] = response.recent_users.map((user: { check_in_time: string | number | Date; username: any; image_url: string }) => {
+                    const formattedDateTime = this.datePipe.transform(user.check_in_time, 'HH:mm MMM dd, yyyy');
 
-                        return {
-                            title: `${user.username}`,
-                            userImageUrl: `${user.userImageUrl}`,
-                            prihod: formattedDateTime
-                        };
-                    });
-                    console.log('Response from backend:', response);
-                }});
+                    return {
+                        title: `${user.username}`,
+                        userImageUrl: '', // To bo blob potem
+                        prihod: formattedDateTime,
+                        image_url: user.image_url // Za pozneje - za fetch
+                    };
+                });
+
+                const imageRequests = usersWithImages.map((user) =>
+                    this.apiService.getUserImage(user.image_url).pipe(
+                        map(blob => {
+                            const url = URL.createObjectURL(blob);
+                            user.userImageUrl = this.domSanitizer.bypassSecurityTrustUrl(url) as string;
+                            return user;
+                        })
+                    )
+                );
+
+                // Fork join pocaka na vse requeste
+                return forkJoin(imageRequests);
+            })
+        ).subscribe({
+            next: (usersWithImages: RecentUsers[]) => {
+                this.users = usersWithImages;
+                this.jeZaposlen = true;
+            },
+            error: (_) => this.jeZaposlen = false
+        });
     }
 
     ngOnDestroy(): void {

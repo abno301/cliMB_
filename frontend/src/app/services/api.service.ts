@@ -40,10 +40,6 @@ export class ApiService {
         );
     }
 
-    getUserPicture(): Observable<any> {
-        return this.http.get(`${this.apiUrl}/picture`, { responseType: 'blob'});
-    }
-
     createPaymentIntent(amount: number): Observable<PaymentIntent> {
         return this.http.post<PaymentIntent>(
             `${this.apiUrl}/create-payment-intent`,
@@ -57,6 +53,10 @@ export class ApiService {
 
     getRecentUsers(): Observable<any> {
         return this.http.get(`${this.apiUrl}/recent-users`);
+    }
+
+    getUserImage(imageUrl: string) {
+        return this.http.get(imageUrl, { responseType: 'blob' });
     }
 
 
