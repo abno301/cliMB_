@@ -6,6 +6,10 @@ import gridfs
 from bson.objectid import ObjectId
 import jwt
 import stripe
+from datetime import datetime
+from io import BytesIO
+import base64
+from flask import url_for
 
 app = Flask(__name__)
 CORS(app)
@@ -164,7 +168,7 @@ def create_payment_intent():
 
         users_collection.update_one(
             {"email": username},
-            {"$inc": {"odrasli_celodnevna_karta": 1}}
+            {"$inc": {"celodnevna_karta": 1}}
         )
 
 
@@ -181,6 +185,77 @@ def create_payment_intent():
 
     except Exception as e:
         return jsonify(error=str(e)), 403
+
+
+@app.route('/check-in', methods=['GET'])
+def check_in():
+    username = get_username_from_access_token(request)
+
+    users_collection = db['users']
+    user = users_collection.find_one({"email": username})
+
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    st_kart = user.get('celodnevna_karta')
+    if st_kart >= 1:
+        users_collection.update_one(
+            {"email": username},
+            {"$inc": {"celodnevna_karta": -1}}
+        )
+
+        recent_users_collection = db['recent_users']
+        recent_users_collection.insert_one({
+            "username": username,
+            "check_in_time": datetime.now()
+        })
+
+        return jsonify({"success": "Check-in uspešen. Ena celodnevna karta porabljena."}), 200
+    else:
+        return jsonify({"error": "Nimate dovolj celodnevnih kart."}), 400
+
+@app.route('/recent-users', methods=['GET'])
+def get_recent_users():
+
+    je_zaposlen = check_je_zaposlen(request)
+
+    if not je_zaposlen:
+        return jsonify({"error": "No permission"}), 401
+
+    recent_users_collection = db['recent_users']
+    recent_users = list(recent_users_collection.find({}, {"_id": 0}))
+
+    users_with_images = []
+
+    for user in recent_users:
+        username = user.get('username')
+
+        # Generate a URL for the user's image
+        image_url = url_for('get_user_image', username=username, _external=True)
+
+        users_with_images.append({
+            "username": username,
+            "check_in_time": user.get('check_in_time'),
+            "image_url": image_url
+        })
+
+    return jsonify({"recent_users": users_with_images}), 200
+
+@app.route('/user-image/<username>', methods=['GET'])
+def get_user_image(username):
+
+    je_zaposlen = check_je_zaposlen(request)
+
+    if not je_zaposlen:
+        return jsonify({"error": "No permission"}), 401
+
+    file = fs.find_one({"metadata.username": username})
+
+    if file:
+        return send_file(file, mimetype='image/jpeg', as_attachment=False)
+    else:
+        return jsonify({"error": "Image not found"}), 404
+
 
 def get_keycloak_admin_token():
     url = f"{KEYCLOAK_SERVER}/realms/{REALM_NAME}/protocol/openid-connect/token"
@@ -217,3 +292,18 @@ def get_username_from_access_token(requestData):
             raise Exception("Token has expired")
         except jwt.InvalidTokenError:
             raise Exception("Invalid token")
+
+
+def check_je_zaposlen(request):
+    access_token_username = get_username_from_access_token(request)
+
+    if not access_token_username:
+        return False
+
+    users_collection = db['users']
+    user = users_collection.find_one({"email": access_token_username})
+
+    if 'role' not in user or user['role'] != 'zaposlen':
+        return False
+
+    return True

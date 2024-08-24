@@ -1,0 +1,28 @@
+<div *ngIf="jeZaposlen; else niZaposlen" class="flex flex-col w-4/5 mx-auto">
+    <h1 class="text-3xl font-bold mb-4 mx-auto">Pregled Nedavno Prijavljenih Uporabnikov</h1>
+    <div class="grid grid-cols-3 gap-4">
+        <mat-card *ngFor="let user of users" class="flex flex-col items-center p-4 h-96">
+            <mat-card-header>
+                <mat-card-title>{{ user.title }}</mat-card-title>
+                <mat-card-subtitle>Čas prihoda: {{ user.prihod }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content class="h-full w-full">
+                <div *ngIf="user.userImageUrl; else noImage" class="h-3/4 w-full flex justify-center items-center">
+                    <img [src]="user.userImageUrl" alt="User Image" class="h-auto w-auto object-cover max-h-full max-w-full" />
+                </div>
+                <ng-template #noImage>
+                    <p>No image found for the user.</p>
+                </ng-template>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
+
+<ng-template #niZaposlen>
+    <div class="flex items-center justify-center h-screen bg-gray-100">
+        <div class="text-center max-w-full p-4 box-border">
+            <h1 class="text-4xl font-bold text-gray-700 mb-4">Ta stran ni na voljo uporabnikom.</h1>
+            <p class="text-lg text-gray-500">Če ste zaposlen, se prosimo obrnite na vašega nadrejenega za dostop do te strani.</p>
+        </div>
+    </div>
+</ng-template>

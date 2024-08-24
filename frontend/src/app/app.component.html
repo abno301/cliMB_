@@ -1,12 +1,24 @@
-<div class="flex items-center justify-between h-20 bg-blue-400 text-white">
-    <a class="flex ml-3 w-10 h-10" routerLink="/" (click)="goHome()">
-        <img ngSrc="assets/logo.png" alt="logo" height="28" width="28">
-        <div class="ml-4 text-4xl font-bold">cliMB</div>
-    </a>
-    <a class="" routerLink="/" (click)="goNakupKart()">Nakup kart</a>
-    <a class="" routerLink="/" (click)="goUrnik()">Urniki</a>
-    <div>
-        <button *ngIf="authService.isLoggedIn()" (click)="logout()">Logout</button>
+<div class="flex items-center justify-between h-20 bg-gray-700 text-white px-4">
+    <div class="flex items-center space-x-4">
+        <a class="flex items-center space-x-2" routerLink="/" (click)="goHome()">
+            <img ngSrc="assets/file_transparent.png" alt="logo" height="50" width="50" class="object-contain">
+            <div class="flex flex-col">
+                <span class="text-xl font-semibold leading-tight">Plezalni Center</span>
+                <span class="text-xl font-bold leading-tight">cliMB</span>
+            </div>
+        </a>
+        <div class="flex items-center space-x-4">
+            <a class="hover:underline" routerLink="/" (click)="goNakupKart()">Nakup kart</a>
+            <a class="hover:underline" routerLink="/" (click)="goUrnik()">Urniki</a>
+            <a class="hover:underline" routerLink="/" (click)="goPregled()">Pregled</a>
+        </div>
+    </div>
+
+    <div class="flex items-center space-x-4">
+<!--        <a class="hover:underline" href="#">Spletna Stran</a>-->
+        <a *ngIf="!authService.isLoggedIn()" class="hover:underline" href="#">Prijava</a>
+        <button *ngIf="authService.isLoggedIn()" class="hover:underline" (click)="logout()">Odjava</button>
     </div>
 </div>
+
 <router-outlet></router-outlet>

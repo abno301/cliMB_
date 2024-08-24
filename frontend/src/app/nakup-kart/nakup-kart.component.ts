@@ -12,8 +12,6 @@ import {PaymentForm} from "./payment-form/payment-form";
 
 export class NakupKartComponent implements OnInit {
 
-    userImageUrl: SafeUrl | null = null;
-
     selectedFile: File | null = null;
     displayedColumns: string[] = ['vstopnica', 'celodnevna', 'dopoldanska', 'popoldanska', 'deset_plus_en', 'mesecna', 'tri_mescna', 'letna'];
 
@@ -24,14 +22,7 @@ export class NakupKartComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.apiService.getUserPicture().subscribe({
-            next: (blob) => {
-                this.userImageUrl = URL.createObjectURL(blob);
-            },
-            error: (error) => {
-                console.error('Error fetching image:', error);
-            }
-        });
+
     }
 
 

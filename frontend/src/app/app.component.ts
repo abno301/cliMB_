@@ -39,6 +39,10 @@ export class AppComponent implements OnInit {
         this.router.navigate(["/urnik"]);
     }
 
+    goPregled() {
+        this.router.navigate(["/pregled"]);
+    }
+
     logout() {
         this.keycloakService.logout(window.location.origin);
     }

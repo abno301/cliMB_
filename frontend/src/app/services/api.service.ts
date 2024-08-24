@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient  } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {Dogodek} from "../shared/models";
 import {PaymentIntent} from "@stripe/stripe-js";
 
@@ -9,7 +9,7 @@ import {PaymentIntent} from "@stripe/stripe-js";
 })
 export class ApiService {
 
-    private apiUrl = 'http://localhost:5000';  // Your Flask backend URL
+    private apiUrl = 'http://localhost:5000';
 
     constructor(private http: HttpClient) {
     }
@@ -40,14 +40,24 @@ export class ApiService {
         );
     }
 
-    getUserPicture(): Observable<any> {
-        return this.http.get(`${this.apiUrl}/picture`, { responseType: 'blob'});
-    }
-
     createPaymentIntent(amount: number): Observable<PaymentIntent> {
         return this.http.post<PaymentIntent>(
             `${this.apiUrl}/create-payment-intent`,
             { amount }
         );
     }
+
+    checkIn(): Observable<any> {
+        return this.http.get(`${this.apiUrl}/check-in`);
+    }
+
+    getRecentUsers(): Observable<any> {
+        return this.http.get(`${this.apiUrl}/recent-users`);
+    }
+
+    getUserImage(imageUrl: string) {
+        return this.http.get(imageUrl, { responseType: 'blob' });
+    }
+
+
 }
