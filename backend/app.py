@@ -7,6 +7,8 @@ from bson.objectid import ObjectId
 import jwt
 import stripe
 from datetime import datetime
+from io import BytesIO
+import base64
 
 app = Flask(__name__)
 CORS(app)
@@ -218,7 +220,42 @@ def get_recent_users():
 
     recent_users = list(recent_users_collection.find({}, {"_id": 0}))
 
-    return jsonify({"recent_users": recent_users}), 200
+    # Create a list to store users with their images
+    users_with_images = []
+
+    for user in recent_users:
+        username = user.get('username')
+
+        print("Username: ", username, flush=True)
+
+        # Find the image for the user in GridFS
+        file = fs.find_one({"metadata.username": username})
+
+        if file:
+            # Read the image from GridFS
+            image_stream = file.read()
+            image_data = BytesIO(image_stream)
+
+            # Convert image data to a base64 string
+            image_data_base64 = base64.b64encode(image_data.getvalue()).decode('utf-8')
+
+            # Append user data with image
+            users_with_images.append({
+                "username": username,
+                "check_in_time": user.get('check_in_time'),
+                "userImageUrl": image_data_base64
+            })
+        else:
+            # If no image is found, add user data without image
+            users_with_images.append({
+                "username": username,
+                "check_in_time": user.get('check_in_time'),
+                "userImageUrl": None
+            })
+
+    # Return the response
+    return jsonify({"recent_users": users_with_images}), 200
+
 
 def get_keycloak_admin_token():
     url = f"{KEYCLOAK_SERVER}/realms/{REALM_NAME}/protocol/openid-connect/token"

@@ -7,8 +7,8 @@
                 <mat-card-subtitle>Čas prihoda: {{ user.prihod }}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content class="h-full w-full">
-                <div *ngIf="userImageUrl; else noImage" class="h-3/4 w-full flex justify-center items-center">
-                    <img [src]="userImageUrl" alt="User Image" class="h-auto w-auto object-cover max-h-full max-w-full" />
+                <div *ngIf="user.userImageUrl; else noImage" class="h-3/4 w-full flex justify-center items-center">
+                    <img [src]="user.userImageUrl" alt="User Image" class="h-auto w-auto object-cover max-h-full max-w-full" />
                 </div>
                 <ng-template #noImage>
                     <p>No image found for the user.</p>

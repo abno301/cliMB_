@@ -44,12 +44,12 @@ export class PregledComponent implements OnInit, OnDestroy {
         this.subscription = interval(5000).pipe(
             switchMap(() => this.apiService.getRecentUsers()))
                 .subscribe({ next: response => {
-                    this.users = response.recent_users.map((user: { check_in_time: string | number | Date; username: any; }) =>  {
+                    this.users = response.recent_users.map((user: { check_in_time: string | number | Date; username: any; userImageUrl: SafeUrl }) =>  {
                         const formattedDateTime = this.datePipe.transform(user.check_in_time, 'HH:mm MMM dd, yyyy');
 
                         return {
                             title: `${user.username}`,
-                            userImageUrl: this.userImageUrl,
+                            userImageUrl: `${user.userImageUrl}`,
                             prihod: formattedDateTime
                         };
                     });
