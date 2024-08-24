@@ -28,6 +28,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {PregledComponent} from "./pregled/pregled.component";
 import {CheckInComponent} from "./check-in/check-in.component";
+import {MatMenuModule} from "@angular/material/menu";
 
 function initializeKeycloak(keycloak: KeycloakService) {
     return () =>
@@ -85,7 +86,9 @@ function initializeKeycloak(keycloak: KeycloakService) {
         MatTableModule,
         ReactiveFormsModule,
         BrowserAnimationsModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        FontAwesomeModule,
+        MatMenuModule
     ],
     providers: [
         {

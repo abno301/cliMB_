@@ -10,7 +10,7 @@ export interface RecentUsers {
     title: string;
     prihod: string;
     userImageUrl?: SafeUrl;
-    image_url: string; // Add this to hold the raw image URL for fetching
+    image_url: string;
 }
 
 

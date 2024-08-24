@@ -1,3 +1,29 @@
 .offer-cards {
     height: 50vh;
 }
+
+.parallax {
+    background-image: url('/assets/pic1.jpg');
+    height: 120%;
+    width: 100%;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    object-fit: cover;
+}
+
+.mat-divider {
+    margin: 0 auto 0 auto !important;
+}
+
+.hover-card {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    transform: scale(1);
+}
+
+.hover-card:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
