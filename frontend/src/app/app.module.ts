@@ -1,7 +1,7 @@
 import { NgModule, APP_INITIALIZER, isDevMode } from '@angular/core';
 import { AppComponent } from './app.component';
 import {KeycloakAngularModule, KeycloakService} from 'keycloak-angular';
-import {CommonModule, NgOptimizedImage} from "@angular/common";
+import {CommonModule, DatePipe, NgOptimizedImage} from "@angular/common";
 import {RouterLink, RouterOutlet} from "@angular/router";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatButtonModule} from "@angular/material/button";
@@ -27,6 +27,7 @@ import {PaymentForm} from "./nakup-kart/payment-form/payment-form";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {PregledComponent} from "./pregled/pregled.component";
+import {CheckInComponent} from "./check-in/check-in.component";
 
 function initializeKeycloak(keycloak: KeycloakService) {
     return () =>
@@ -52,7 +53,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
         UrnikComponent,
         DodajDogodekComponent,
         PaymentForm,
-        PregledComponent
+        PregledComponent,
+        CheckInComponent,
     ],
     imports: [
         BrowserModule,
@@ -91,7 +93,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
             useFactory: initializeKeycloak,
             multi: true,
             deps: [KeycloakService]
-        }
+        },
+        DatePipe
     ],
     bootstrap: [AppComponent, PaymentForm]
 })

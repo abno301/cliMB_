@@ -6,6 +6,7 @@ import gridfs
 from bson.objectid import ObjectId
 import jwt
 import stripe
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
@@ -164,7 +165,7 @@ def create_payment_intent():
 
         users_collection.update_one(
             {"email": username},
-            {"$inc": {"odrasli_celodnevna_karta": 1}}
+            {"$inc": {"celodnevna_karta": 1}}
         )
 
 
@@ -181,6 +182,43 @@ def create_payment_intent():
 
     except Exception as e:
         return jsonify(error=str(e)), 403
+
+
+@app.route('/check-in', methods=['GET'])
+def check_in():
+    username = get_username_from_access_token(request)
+
+    users_collection = db['users']
+    user = users_collection.find_one({"email": username})
+
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    st_kart = user.get('celodnevna_karta')
+    if st_kart >= 1:
+        users_collection.update_one(
+            {"email": username},
+            {"$inc": {"celodnevna_karta": -1}}
+        )
+
+        recent_users_collection = db['recent_users']
+        recent_users_collection.insert_one({
+            "username": username,
+            "check_in_time": datetime.now()
+        })
+
+        return jsonify({"success": "Check-in uspešen. Ena celodnevna karta porabljena."}), 200
+    else:
+        return jsonify({"error": "Nimate dovolj celodnevnih kart."}), 400
+
+@app.route('/recent-users', methods=['GET'])
+def get_recent_users():
+
+    recent_users_collection = db['recent_users']
+
+    recent_users = list(recent_users_collection.find({}, {"_id": 0}))
+
+    return jsonify({"recent_users": recent_users}), 200
 
 def get_keycloak_admin_token():
     url = f"{KEYCLOAK_SERVER}/realms/{REALM_NAME}/protocol/openid-connect/token"
