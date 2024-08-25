@@ -37,3 +37,25 @@ h1 {
 .dogodek-actions {
     margin-top: 20px !important;
 }
+
+body {
+    background-color: rgb(243 244 246);
+}
+
+.checkmark__circle {
+    stroke-dasharray: 150;
+    stroke-dashoffset: 150;
+    animation: stroke 1s ease forwards;
+}
+
+.checkmark__check {
+    stroke-dasharray: 50;
+    stroke-dashoffset: 50;
+    animation: stroke 1s ease forwards 0.5s;
+}
+
+@keyframes stroke {
+    100% {
+        stroke-dashoffset: 0;
+    }
+}

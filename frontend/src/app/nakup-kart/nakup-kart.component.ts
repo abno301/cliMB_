@@ -6,6 +6,7 @@ import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {PaymentForm} from "./payment-form/payment-form";
 import {Uporabnik} from "../shared/models";
 import {switchMap} from "rxjs";
+import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
 
 @Component({
     templateUrl: './nakup-kart.component.html',
@@ -22,11 +23,18 @@ export class NakupKartComponent implements OnInit {
     trenutniUporabnik: Uporabnik;
     imaSliko: boolean = false;
 
+    isSmallScreen: boolean = false;
+
     constructor(
         private apiService: ApiService,
         private authService: AuthService,
         public dialog: MatDialog,
-    ) {}
+        private breakpointObserver: BreakpointObserver
+    ) {
+        this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+            this.isSmallScreen = result.matches;
+        });
+    }
 
     ngOnInit(): void {
         this.authService.getTrenutniUporabnik().pipe(
@@ -74,9 +82,8 @@ export class NakupKartComponent implements OnInit {
         formData.append('username', this.authService.trenutni_uporabnik.email);
 
         this.apiService.uploadPicture(formData).subscribe({
-            next: response => {
+            next: _ => {
                 this.imaSliko = true;
-                console.log('Slika uspešno naložena!', response)
             },
             error: err => console.error('Napaka pri nalaganju slike: ', err),
         });
@@ -84,7 +91,6 @@ export class NakupKartComponent implements OnInit {
 
     openPayment(amount: number, title: string): void {
         const dialogConfig = new MatDialogConfig();
-
 
 
         dialogConfig.data = { email: this.authService.trenutni_uporabnik.email, amount: amount, title: title }

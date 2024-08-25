@@ -17,6 +17,7 @@ export class PaymentForm implements OnInit {
 
     isLoading: boolean = false;
     isSuccess: boolean = false;
+    isError: boolean = false;
 
     cardOptions: StripeCardElementOptions = {
         style: {
@@ -76,12 +77,16 @@ export class PaymentForm implements OnInit {
                     })
                 ).subscribe((result) => {
                     if (result.error) {
-                        console.log(result.error.message);
-                        alert("INSUFFICIENT FUNDS HAHA");
+                        this.isError = true;
+                        setTimeout(() => {
+                            this.dialogRef.close();
+                        }, 5000);
                     } else {
                         if (result.paymentIntent.status === 'succeeded') {
                             this.isSuccess = true;
-                            alert("SUCCESS");
+                            setTimeout(() => {
+                                this.dialogRef.close();
+                            }, 5000);
                         }
                     }
                 });

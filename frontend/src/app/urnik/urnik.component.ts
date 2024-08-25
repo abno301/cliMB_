@@ -4,6 +4,7 @@ import {DodajDogodekComponent} from './dodaj-dogodek/dodaj-dogodek.component';
 import {Dogodek} from '../shared/models';
 import {AuthService} from "../services/auth.service";
 import {ApiService} from "../services/api.service";
+import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
 
 @Component({
   templateUrl: './urnik.component.html',
@@ -19,11 +20,17 @@ export class UrnikComponent implements OnInit{
 
   jeZaposlen: boolean = false;
 
-  dogodekMap: { [key: string]: any } = {};
+  isSmallScreen: boolean = false;
 
   constructor(public dialog: MatDialog,
               private apiService: ApiService,
-              protected authService: AuthService) {}
+              protected authService: AuthService,
+              private breakpointObserver: BreakpointObserver
+  ) {
+    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+      this.isSmallScreen = result.matches;
+    });
+  }
 
   ngOnInit(): void {
     this.generateFixedColors();
@@ -33,8 +40,6 @@ export class UrnikComponent implements OnInit{
 
     this.apiService.getUrnik().subscribe({
       next: dogodki => {
-        console.log("Getting dogodki...");
-        console.log(dogodki);
         if (dogodki) {
           this.dogodki = dogodki;
         }

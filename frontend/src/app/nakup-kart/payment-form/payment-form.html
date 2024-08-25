@@ -44,14 +44,22 @@
     </div>
 
     <!-- Overlay Spinner (initially hidden) -->
-    <div *ngIf="isLoading" class="absolute inset-0 bg-white bg-opacity-75 flex justify-center items-center">
+    <div *ngIf="isLoading && !isSuccess && !isError" class="absolute inset-0 bg-white bg-opacity-75 flex justify-center items-center">
         <mat-spinner class="w-20 h-20"></mat-spinner>
     </div>
 
-<!--    <div *ngIf="isSuccess" class="absolute inset-0 bg-white bg-opacity-75 flex justify-center items-center">-->
-<!--        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">-->
-<!--            <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />-->
-<!--            <path class="checkmark__check" fill="none" d="M14 27l10 10L38 18" />-->
-<!--        </svg>-->
-<!--    </div>-->
+    <div *ngIf="isSuccess" class="absolute inset-0 bg-white bg-opacity-90 flex flex-col justify-center items-center">
+        <span class="font-bold text-2xl">Plačilo je bilo uspešno!</span>
+        <dotlottie-player
+                src="https://lottie.host/86a8f500-a37d-40b6-b459-9965903e981a/WMB0TeIO36.json"
+                background="transparent"
+                speed="1"
+                class="w-1/2 h-1/2"
+                autoplay>
+        </dotlottie-player>
+    </div>
+
+    <div *ngIf="isError" class="absolute inset-0 bg-white bg-opacity-60 flex flex-col justify-center items-center">
+        <span class="font-bold text-2xl">Prišlo je do napake pri plačilu!</span>
+    </div>
 </div>
