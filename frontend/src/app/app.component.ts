@@ -67,6 +67,10 @@ export class AppComponent implements OnInit {
         this.router.navigate(["/nakup-kart"]);
     }
 
+    goPregledProstorov() {
+        this.router.navigate(["/pregled-prostorov"]);
+    }
+
     goUrnik() {
         this.router.navigate(["/urnik"]);
     }

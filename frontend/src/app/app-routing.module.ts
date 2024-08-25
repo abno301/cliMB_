@@ -6,6 +6,7 @@ import {AuthGuard} from "./guards/auth.guard";
 import { UrnikComponent } from './urnik/urnik.component';
 import {PregledComponent} from "./pregled/pregled.component";
 import {CheckInComponent} from "./check-in/check-in.component";
+import {PregledProstorovComponent} from "./pregled-prostorov/pregled-prostorov.component";
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -13,6 +14,7 @@ const routes: Routes = [
     { path: 'nakup-kart', component: NakupKartComponent, canActivate: [AuthGuard] },
     { path: 'pregled', component: PregledComponent, canActivate: [AuthGuard] },
     { path: 'check-in', component: CheckInComponent, canActivate: [AuthGuard] },
+    { path: 'pregled-prostorov', component: PregledProstorovComponent },
 ];
 
 @NgModule({
