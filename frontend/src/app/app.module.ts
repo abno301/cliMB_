@@ -99,6 +99,6 @@ function initializeKeycloak(keycloak: KeycloakService) {
         },
         DatePipe
     ],
-    bootstrap: [AppComponent, PaymentForm]
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

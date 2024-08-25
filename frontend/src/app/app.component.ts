@@ -34,6 +34,7 @@ export class AppComponent implements OnInit {
         this.authService.checkLoginStatus();
         this.authService.getTrenutniUporabnik().subscribe({
             next: (uporabnik) => {
+                console.log(uporabnik);
                 this.trenutni_uporabnik = uporabnik;
                 if (uporabnik.role == "zaposlen") {
                     this.jeZaposlen = true;
@@ -42,7 +43,7 @@ export class AppComponent implements OnInit {
             }
         })
         this.apiService.checkUsers().subscribe({
-            next: (_) => this.loading = false,
+            next: (_) => console.log("lals"),
             error: err => console.log("Error while checking users", err)
         });
     }

@@ -6,7 +6,7 @@ import gridfs
 from bson.objectid import ObjectId
 import jwt
 import stripe
-from datetime import datetime
+from datetime import datetime, timedelta
 from io import BytesIO
 import base64
 from flask import url_for
@@ -75,7 +75,15 @@ def get_users():
 @app.route('/get-user/<username>', methods=['GET'])
 def get_user(username):
     users_db = db['users']
-    user = users_db.find_one({"email": username}, {"_id": 0, "email": 1, "role": 1})
+    user = users_db.find_one({"email": username}, {
+        "_id": 0,
+        "email": 1,
+        "role": 1,
+        "celodnevna_karta": 1,
+        "mesecna_karta": 1,
+        "letna_karta": 1,
+        "veljavna_do": 1,
+    })
 
     if not user:
         return jsonify({"error": "User not found"}), 404
@@ -166,11 +174,28 @@ def create_payment_intent():
         if not user:
             return jsonify({"error": "User not found"}), 404
 
-        users_collection.update_one(
-            {"email": username},
-            {"$inc": {"celodnevna_karta": 1}}
-        )
-
+        if amount == 1000:
+            users_collection.update_one(
+                {"email": username},
+                {"$inc": {"celodnevna_karta": 1}}
+            )
+        elif amount == 7000:
+            valid_until = datetime.now() + timedelta(days=30)
+            users_collection.update_one(
+                {"email": username},
+                {"$set": {"mesecna_karta": True, "veljavna_do": valid_until, "letna_karta": False}}
+            )
+        elif amount == 10000:
+            users_collection.update_one(
+                {"email": username},
+                {"$inc": {"celodnevna_karta": 11}}
+            )
+        elif amount == 40000:
+            valid_until = datetime.now() + timedelta(days=365)
+            users_collection.update_one(
+                {"email": username},
+                {"$set": {"letna_karta": True, "veljavna_do": valid_until, "mesecna_karta": False}}
+            )
 
         payment_intent = stripe.PaymentIntent.create(
             amount=int(amount),  # Amount is in cents BTW

@@ -30,7 +30,7 @@
                     <mat-divider></mat-divider>
                     <p><strong>Email:</strong> {{ trenutni_uporabnik.email }}</p>
                     <div *ngIf="!jeZaposlen">
-                        <p><strong>Število Celodnevnih Kart:</strong> {{ steviloKart }}</p>
+                        <p><strong>Število Celodnevnih Kart:</strong> {{ trenutni_uporabnik.celodnevneKarte }}</p>
                     </div>
                     <button mat-raised-button
                             color="primary"
