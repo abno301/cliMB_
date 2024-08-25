@@ -40,8 +40,6 @@ export class UrnikComponent implements OnInit{
 
     this.apiService.getUrnik().subscribe({
       next: dogodki => {
-        console.log("Getting dogodki...");
-        console.log(dogodki);
         if (dogodki) {
           this.dogodki = dogodki;
         }

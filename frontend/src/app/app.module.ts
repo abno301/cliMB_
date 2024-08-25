@@ -1,4 +1,4 @@
-import { NgModule, APP_INITIALIZER, isDevMode } from '@angular/core';
+import {NgModule, APP_INITIALIZER, isDevMode, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { AppComponent } from './app.component';
 import {KeycloakAngularModule, KeycloakService} from 'keycloak-angular';
 import {CommonModule, DatePipe, NgOptimizedImage} from "@angular/common";
@@ -103,6 +103,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
         },
         DatePipe
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]  // Add this line
 })
 export class AppModule { }

@@ -57,7 +57,6 @@ export class AppComponent implements OnInit {
                 if (uporabnik.role == "zaposlen") {
                     this.jeZaposlen = true;
                 }
-                console.log(this.trenutni_uporabnik);
                 this.loading = false;
             }
         })
