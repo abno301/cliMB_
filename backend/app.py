@@ -222,8 +222,35 @@ def check_in():
     if not user:
         return jsonify({"error": "User not found"}), 404
 
+
+    # Preveri, če ima uporabnik letno karto in če je veljavna
+    if user.get('letna_karta') and 'veljavna_do' in user:
+        veljavna_do = user['veljavna_do']
+        if veljavna_do >= datetime.now():
+            recent_users_collection = db['recent_users']
+            recent_users_collection.insert_one({
+                "username": username,
+                "check_in_time": datetime.now()
+            })
+            return jsonify({"success": "Check-in uspešen. Letna karta je veljavna."}), 200
+        else:
+            return jsonify({"error": "Letna karta je neveljavna."}), 400
+
+    if user.get('mesecna_karta') and 'veljavna_do' in user:
+        veljavna_do = user['veljavna_do']
+        if veljavna_do >= datetime.now():
+            recent_users_collection = db['recent_users']
+            recent_users_collection.insert_one({
+                "username": username,
+                "check_in_time": datetime.now()
+            })
+            return jsonify({"success": "Check-in uspešen. Mesečna karta je veljavna."}), 200
+        else:
+            return jsonify({"error": "Mesečna karta je neveljavna."}), 400
+
+
     st_kart = user.get('celodnevna_karta')
-    if st_kart >= 1:
+    if user.get('celodnevna_karta') and st_kart >= 1:
         users_collection.update_one(
             {"email": username},
             {"$inc": {"celodnevna_karta": -1}}
@@ -296,8 +323,8 @@ def get_keycloak_admin_token():
     response.raise_for_status()
     return response.json()['access_token']
 
-def get_username_from_access_token(requestData):
-        auth_header = requestData.headers.get('Authorization')
+def get_username_from_access_token(request_data):
+        auth_header = request_data.headers.get('Authorization')
         if auth_header is None or not auth_header.startswith("Bearer "):
             return jsonify({"error": "Authorization header is missing or invalid"}), 401
 

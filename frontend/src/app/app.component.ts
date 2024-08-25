@@ -17,11 +17,13 @@ export class AppComponent implements OnInit {
 
     loading: boolean = true;
 
-    steviloKart: number = 5; // Replace with actual data
-
     trenutni_uporabnik: Uporabnik;
 
     jeZaposlen: boolean = false;
+
+    veljavnaDo: string;
+
+    stKart: number;
 
     constructor(
         private router: Router,
@@ -34,11 +36,20 @@ export class AppComponent implements OnInit {
         this.authService.checkLoginStatus();
         this.authService.getTrenutniUporabnik().subscribe({
             next: (uporabnik) => {
-                console.log(uporabnik);
+                let formattedDate;
+                if (uporabnik.veljavnaDo) {
+                    formattedDate = uporabnik.veljavnaDo.getFullYear() + '-' +
+                        ('0' + (uporabnik.veljavnaDo.getMonth() + 1)).slice(-2) + '-' +
+                        ('0' + uporabnik.veljavnaDo.getDate()).slice(-2);
+                    this.veljavnaDo = formattedDate;
+                }
+                this.stKart = uporabnik.celodnevneKarte !== undefined ? uporabnik.celodnevneKarte : 0;
+
                 this.trenutni_uporabnik = uporabnik;
                 if (uporabnik.role == "zaposlen") {
                     this.jeZaposlen = true;
                 }
+                console.log(this.trenutni_uporabnik);
                 this.loading = false;
             }
         })

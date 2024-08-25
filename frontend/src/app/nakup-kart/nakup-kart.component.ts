@@ -74,7 +74,10 @@ export class NakupKartComponent implements OnInit {
         formData.append('username', this.authService.trenutni_uporabnik.email);
 
         this.apiService.uploadPicture(formData).subscribe({
-            next: response => console.log('Slika uspešno naložena!', response),
+            next: response => {
+                this.imaSliko = true;
+                console.log('Slika uspešno naložena!', response)
+            },
             error: err => console.error('Napaka pri nalaganju slike: ', err),
         });
     }

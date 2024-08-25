@@ -29,9 +29,20 @@
                     <h2 *ngIf="jeZaposlen" class="text-xl">Zaposlen</h2>
                     <mat-divider></mat-divider>
                     <p><strong>Email:</strong> {{ trenutni_uporabnik.email }}</p>
-                    <div *ngIf="!jeZaposlen">
-                        <p><strong>Število Celodnevnih Kart:</strong> {{ trenutni_uporabnik.celodnevneKarte }}</p>
+                    <div *ngIf="!jeZaposlen && !trenutni_uporabnik.mesecnaKarta && !trenutni_uporabnik.letnaKarta">
+                        <p><strong>Število Enodnevnih Kart:</strong> {{ stKart }}</p>
                     </div>
+
+                    <div *ngIf="trenutni_uporabnik.mesecnaKarta" class="flex flex-col">
+                        <p><strong>Imate mesečno karto</strong></p>
+                        <p>Veljavna do: {{ veljavnaDo }}</p>
+                    </div>
+
+                    <div *ngIf="trenutni_uporabnik.letnaKarta">
+                        <p><strong>Imate letno karto</strong></p>
+                        <p>Veljavna do: {{ veljavnaDo }}</p>
+                    </div>
+
                     <button mat-raised-button
                             color="primary"
                             class="hover:text-gray-300 font-semibold mt-2"
