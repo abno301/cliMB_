@@ -19,6 +19,8 @@ export class UrnikComponent implements OnInit{
 
   jeZaposlen: boolean = false;
 
+  dogodekMap: { [key: string]: any } = {};
+
   constructor(public dialog: MatDialog,
               private apiService: ApiService,
               protected authService: AuthService) {}
@@ -43,8 +45,8 @@ export class UrnikComponent implements OnInit{
   openDialog(vrsta: number, stolpec: number): void {
     const dialogConfig = new MatDialogConfig();
 
-    dialogConfig.width = '50vh';  
-    dialogConfig.height = '30vh';
+    dialogConfig.width = '50vh';
+    dialogConfig.height = '45vh';
 
 
     dialogConfig.panelClass = 'custom-dialog-container';
@@ -57,11 +59,13 @@ export class UrnikComponent implements OnInit{
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       if (result) {
+        console.log(result);
         let dogodek: Dogodek = {
           ime: result.ime,
           ura: result.ura,
           vrsta: result.vrsta,
-          stolpec: result.stolpec
+          stolpec: result.stolpec,
+          barva: result.barva
         }
         const existingIndex = this.dogodki.findIndex(d => d.vrsta === dogodek.vrsta && d.stolpec === dogodek.stolpec);
 
@@ -70,9 +74,8 @@ export class UrnikComponent implements OnInit{
         } else {
           this.dogodki.push(dogodek);
         }
-        console.log(this.dogodki);
         this.apiService.updateUrnik(this.dogodki).subscribe({
-          next: response => console.log(response),
+          next: _ => {},
           error: err => console.log("Error while updating schedule: ", err)
         });
 

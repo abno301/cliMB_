@@ -109,9 +109,11 @@ def update_urnik():
     try:
         dogodki = request.json
 
+        print(dogodki, flush=True)
+
         urnik_doc = db['urnik']
 
-        result = urnik_doc.replace_one({}, {"dogodki": dogodki}, upsert=True)
+        urnik_doc.replace_one({}, {"dogodki": dogodki}, upsert=True)
 
 
         return jsonify({"message": "Schedule updated successfully"}), 200
