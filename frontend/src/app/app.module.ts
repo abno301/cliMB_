@@ -37,7 +37,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
         keycloak.init({
             config: {
                 url: 'http://localhost:8080/auth',
-                realm: 'flask-demo',
+                realm: 'cliMB',
                 clientId: 'flask',
             },
             initOptions: {

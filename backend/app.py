@@ -36,7 +36,7 @@ except Exception as e:
 @app.route('/check-users', methods=['GET'])
 def register_user():
     token = get_keycloak_admin_token()
-    url = f"{KEYCLOAK_SERVER}/admin/realms/flask-demo/users"
+    url = f"{KEYCLOAK_SERVER}/admin/realms/cliMB/users"
     headers = {'Authorization': f'Bearer {token}'}
 
     response = requests.get(url, headers=headers)

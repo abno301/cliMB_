@@ -84,7 +84,7 @@ export class AppComponent implements OnInit {
     }
 
     redirectToKeycloak(): void {
-        const keycloakUrl = 'http://localhost:8080/auth/realms/flask-demo/protocol/openid-connect/auth';
+        const keycloakUrl = 'http://localhost:8080/auth/realms/cliMB/protocol/openid-connect/auth';
         const clientId = 'flask';
         const redirectUri = encodeURIComponent('http://localhost:4200/');
         const state = '8b03c486-e1fb-4bc1-88d3-4a0698259956'; // You might want to generate this dynamically
