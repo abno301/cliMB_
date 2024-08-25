@@ -48,7 +48,7 @@ export class PaymentForm implements OnInit {
         private fb: FormBuilder,
         private stripeService: StripeService,
         private apiService: ApiService,
-        @Inject(MAT_DIALOG_DATA) public data: { email: string; amount: number; }
+        @Inject(MAT_DIALOG_DATA) public data: { email: string; amount: number; title: string }
     ) {}
 
     ngOnInit(): void {

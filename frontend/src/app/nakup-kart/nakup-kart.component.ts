@@ -4,16 +4,23 @@ import {AuthService} from "../services/auth.service";
 import {SafeUrl} from '@angular/platform-browser';
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {PaymentForm} from "./payment-form/payment-form";
+import {Uporabnik} from "../shared/models";
+import {switchMap} from "rxjs";
 
 @Component({
-    selector: 'nakup-kart',
     templateUrl: './nakup-kart.component.html',
 })
 
 export class NakupKartComponent implements OnInit {
 
+    loading: boolean = true;
+    loading2: boolean = true;
+
     selectedFile: File | null = null;
-    displayedColumns: string[] = ['vstopnica', 'celodnevna', 'dopoldanska', 'popoldanska', 'deset_plus_en', 'mesecna', 'tri_mescna', 'letna'];
+    displayedColumns: string[] = ['vstopnica', 'celodnevna', 'deset_plus_en', 'mesecna', 'letna'];
+
+    trenutniUporabnik: Uporabnik;
+    imaSliko: boolean = false;
 
     constructor(
         private apiService: ApiService,
@@ -22,15 +29,33 @@ export class NakupKartComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        this.authService.getTrenutniUporabnik().pipe(
+            switchMap(uporabnik => {
+                this.trenutniUporabnik = uporabnik;
+                this.loading = false;
 
+                return this.apiService.checkPicture();
+            })
+        ).subscribe({
+            next: () => {
+                this.imaSliko = true;
+                this.loading2 = false;
+            },
+            error: () => {
+                this.imaSliko = false;
+                this.loading2 = false;
+            }
+        });
     }
 
 
-    tickets = [
-        { vstopnica: 'Predšolski otroci', celodnevna: 4.50, dopoldanska: 4.00, popoldanska: 4.00, deset_plus_en: 45.00, mesecna: 36.00, tri_mescna: 90.00, letna: 190.00 },
-        { vstopnica: 'Šolarji', celodnevna: 9.50, dopoldanska: 8.50, popoldanska: 8.50, deset_plus_en: 95.00, mesecna: 76.00, tri_mescna: 190.00, letna: 400.00 },
-        { vstopnica: 'Odrasli', celodnevna: 15.00, dopoldanska: 13.50, popoldanska: 13.50, deset_plus_en: 150.00, mesecna: 120.00, tri_mescna: 300.00, letna: 630.00 },
-    ];
+    tickets = [{
+        vstopnica: 'Odrasli',
+        celodnevna: 10.00,
+        deset_plus_en: 100.00,
+        mesecna: 70.00,
+        letna: 400.00
+    }];
 
     onFileSelected(event: Event): void {
         const fileInput = event.target as HTMLInputElement;
@@ -49,15 +74,20 @@ export class NakupKartComponent implements OnInit {
         formData.append('username', this.authService.trenutni_uporabnik.email);
 
         this.apiService.uploadPicture(formData).subscribe({
-            next: response => console.log('Slika uspešno naložena!', response),
+            next: response => {
+                this.imaSliko = true;
+                console.log('Slika uspešno naložena!', response)
+            },
             error: err => console.error('Napaka pri nalaganju slike: ', err),
         });
     }
 
-    openPayment(): void {
+    openPayment(amount: number, title: string): void {
         const dialogConfig = new MatDialogConfig();
 
-        dialogConfig.data = { email: this.authService.trenutni_uporabnik.email, amount: 1000 }
+
+
+        dialogConfig.data = { email: this.authService.trenutni_uporabnik.email, amount: amount, title: title }
 
         const dialogRef = this.dialog.open(PaymentForm, dialogConfig);
 

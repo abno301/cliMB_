@@ -44,7 +44,11 @@ export class AuthService {
                 switchMap(user => {
                     const trenutni_uporabnik: Uporabnik = {
                         email: user.email,
-                        role: user.role
+                        role: user.role,
+                        celodnevneKarte: user.celodnevna_karta,
+                        mesecnaKarta: user.mesecna_karta,
+                        letnaKarta: user.letna_karta,
+                        veljavnaDo: new Date(user.veljavna_do)
                     };
                     return of(trenutni_uporabnik);
                 }),
@@ -53,7 +57,7 @@ export class AuthService {
                 })
             );
         } else {
-            return of({ email: "", role: "" });
+            return of({ email: "", role: "" ,});
         }
     }
 

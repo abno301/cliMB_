@@ -6,7 +6,7 @@ import gridfs
 from bson.objectid import ObjectId
 import jwt
 import stripe
-from datetime import datetime
+from datetime import datetime, timedelta
 from io import BytesIO
 import base64
 from flask import url_for
@@ -75,7 +75,15 @@ def get_users():
 @app.route('/get-user/<username>', methods=['GET'])
 def get_user(username):
     users_db = db['users']
-    user = users_db.find_one({"email": username}, {"_id": 0, "email": 1, "role": 1})
+    user = users_db.find_one({"email": username}, {
+        "_id": 0,
+        "email": 1,
+        "role": 1,
+        "celodnevna_karta": 1,
+        "mesecna_karta": 1,
+        "letna_karta": 1,
+        "veljavna_do": 1,
+    })
 
     if not user:
         return jsonify({"error": "User not found"}), 404
@@ -166,11 +174,28 @@ def create_payment_intent():
         if not user:
             return jsonify({"error": "User not found"}), 404
 
-        users_collection.update_one(
-            {"email": username},
-            {"$inc": {"celodnevna_karta": 1}}
-        )
-
+        if amount == 1000:
+            users_collection.update_one(
+                {"email": username},
+                {"$inc": {"celodnevna_karta": 1}}
+            )
+        elif amount == 7000:
+            valid_until = datetime.now() + timedelta(days=30)
+            users_collection.update_one(
+                {"email": username},
+                {"$set": {"mesecna_karta": True, "veljavna_do": valid_until, "letna_karta": False}}
+            )
+        elif amount == 10000:
+            users_collection.update_one(
+                {"email": username},
+                {"$inc": {"celodnevna_karta": 11}}
+            )
+        elif amount == 40000:
+            valid_until = datetime.now() + timedelta(days=365)
+            users_collection.update_one(
+                {"email": username},
+                {"$set": {"letna_karta": True, "veljavna_do": valid_until, "mesecna_karta": False}}
+            )
 
         payment_intent = stripe.PaymentIntent.create(
             amount=int(amount),  # Amount is in cents BTW
@@ -197,8 +222,35 @@ def check_in():
     if not user:
         return jsonify({"error": "User not found"}), 404
 
+
+    # Preveri, če ima uporabnik letno karto in če je veljavna
+    if user.get('letna_karta') and 'veljavna_do' in user:
+        veljavna_do = user['veljavna_do']
+        if veljavna_do >= datetime.now():
+            recent_users_collection = db['recent_users']
+            recent_users_collection.insert_one({
+                "username": username,
+                "check_in_time": datetime.now()
+            })
+            return jsonify({"success": "Check-in uspešen. Letna karta je veljavna."}), 200
+        else:
+            return jsonify({"error": "Letna karta je neveljavna."}), 400
+
+    if user.get('mesecna_karta') and 'veljavna_do' in user:
+        veljavna_do = user['veljavna_do']
+        if veljavna_do >= datetime.now():
+            recent_users_collection = db['recent_users']
+            recent_users_collection.insert_one({
+                "username": username,
+                "check_in_time": datetime.now()
+            })
+            return jsonify({"success": "Check-in uspešen. Mesečna karta je veljavna."}), 200
+        else:
+            return jsonify({"error": "Mesečna karta je neveljavna."}), 400
+
+
     st_kart = user.get('celodnevna_karta')
-    if st_kart >= 1:
+    if user.get('celodnevna_karta') and st_kart >= 1:
         users_collection.update_one(
             {"email": username},
             {"$inc": {"celodnevna_karta": -1}}
@@ -271,8 +323,8 @@ def get_keycloak_admin_token():
     response.raise_for_status()
     return response.json()['access_token']
 
-def get_username_from_access_token(requestData):
-        auth_header = requestData.headers.get('Authorization')
+def get_username_from_access_token(request_data):
+        auth_header = request_data.headers.get('Authorization')
         if auth_header is None or not auth_header.startswith("Bearer "):
             return jsonify({"error": "Authorization header is missing or invalid"}), 401
 

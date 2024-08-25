@@ -6,7 +6,6 @@ import {AuthService} from "../services/auth.service";
 import {ApiService} from "../services/api.service";
 
 @Component({
-  selector: 'urnik',
   templateUrl: './urnik.component.html',
   styleUrls: ['./urnik.component.css']
 })

@@ -40,6 +40,9 @@ export class ApiService {
         );
     }
 
+    checkPicture(): Observable<any> {
+        return this.http.get(`${this.apiUrl}/picture`, { responseType: 'blob' });    }
+
     createPaymentIntent(amount: number): Observable<PaymentIntent> {
         return this.http.post<PaymentIntent>(
             `${this.apiUrl}/create-payment-intent`,

@@ -7,5 +7,9 @@ export interface Dogodek {
 
 export interface Uporabnik {
     email: string,
-    role: string
+    role: string,
+    celodnevneKarte?: number,
+    mesecnaKarta?: boolean,
+    letnaKarta?: boolean,
+    veljavnaDo?: Date
 }

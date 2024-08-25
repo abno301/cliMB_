@@ -3,7 +3,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 
 @Component({
-  selector: 'urnik',
   templateUrl: './dodaj-dogodek.component.html',
 })
 export class DodajDogodekComponent {
