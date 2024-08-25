@@ -5,6 +5,7 @@ import {AuthService} from "./services/auth.service";
 import {ApiService} from "./services/api.service";
 import {faBeerMugEmpty, faUser} from '@fortawesome/free-solid-svg-icons';
 import {Uporabnik} from "./shared/models";
+import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
 
 
 @Component({
@@ -25,12 +26,19 @@ export class AppComponent implements OnInit {
 
     stKart: number;
 
+    isSmallScreen: boolean = false;
+
     constructor(
         private router: Router,
         private keycloakService: KeycloakService,
         protected authService: AuthService,
-        private apiService: ApiService
-    ) {}
+        private apiService: ApiService,
+        private breakpointObserver: BreakpointObserver
+    ) {
+        this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+            this.isSmallScreen = result.matches;
+        });
+    }
 
     ngOnInit() {
         this.authService.checkLoginStatus();

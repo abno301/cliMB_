@@ -37,3 +37,7 @@ h1 {
 .dogodek-actions {
     margin-top: 20px !important;
 }
+
+body {
+    background-color: rgb(243 244 246);
+}
