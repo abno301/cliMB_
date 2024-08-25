@@ -1,5 +1,5 @@
-<div class="w-full text-center">
-  <h1>PLEZALNA ŠOLA ZA OTROKE IN MLADOSTNIKE</h1>
+<div class="w-full text-center mt-6">
+  <h1>PLEZALNA ŠOLA</h1>
 </div>
 
 <div class="container mx-auto p-4 h-screen w-2/3">
@@ -14,12 +14,17 @@
     <!-- Generate the 5x5 grid -->
     <ng-container *ngFor="let row of rows; let rowIndex = index">
       <ng-container *ngFor="let col of cols; let colIndex = index">
-        <div
-          [ngStyle]="{'background-color': colors[rowIndex][colIndex]}"
-          class="text-white p-2 cursor-pointer overflow-hidden"
-          [class.cursor-pointer]="jeZaposlen"
-          (click)="jeZaposlen ? openDialog(rowIndex + 1, colIndex + 1) : null"
-        >
+<!--        <div-->
+<!--          [ngStyle]="{'background-color': colors[rowIndex][colIndex]}"-->
+<!--          class="text-white p-2 cursor-pointer overflow-hidden"-->
+<!--          [class.cursor-pointer]="jeZaposlen"-->
+<!--          (click)="jeZaposlen ? openDialog(rowIndex + 1, colIndex + 1) : null"-->
+<!--        >-->
+          <div class="text-white p-2 cursor-pointer overflow-hidden bg-gray-300"
+               [class.cursor-pointer]="jeZaposlen"
+               [ngStyle]="{ 'background-color': najdiDogodek(rowIndex + 1, colIndex + 1)?.barva }"
+               (click)="jeZaposlen ? openDialog(rowIndex + 1, colIndex + 1) : null"
+          >
           <div *ngIf="najdiDogodek(rowIndex + 1, colIndex + 1) as dogodek" class="flex flex-col text-center">
             <span>{{ dogodek.ime }}</span>
             <span>{{ dogodek.ura }}</span>

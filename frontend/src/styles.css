@@ -25,3 +25,15 @@ h1 {
     grid-template-rows: repeat(6, minmax(0, 1fr)); /* 6 equal rows */
     gap: 0.5rem; /* Adjust gap between items as needed */
 }
+
+.mdc-radio__outer-circle {
+    display: none !important;
+}
+
+.shrani-gumb {
+    margin-left: auto !important;
+}
+
+.dogodek-actions {
+    margin-top: 20px !important;
+}

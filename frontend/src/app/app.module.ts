@@ -30,6 +30,7 @@ import {PregledComponent} from "./pregled/pregled.component";
 import {CheckInComponent} from "./check-in/check-in.component";
 import {MatMenuModule} from "@angular/material/menu";
 import {PregledProstorovComponent} from "./pregled-prostorov/pregled-prostorov.component";
+import {MatRadioModule} from "@angular/material/radio";
 
 function initializeKeycloak(keycloak: KeycloakService) {
     return () =>
@@ -90,7 +91,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
         BrowserAnimationsModule,
         MatProgressSpinnerModule,
         FontAwesomeModule,
-        MatMenuModule
+        MatMenuModule,
+        MatRadioModule
     ],
     providers: [
         {
