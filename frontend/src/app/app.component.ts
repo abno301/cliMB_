@@ -5,6 +5,7 @@ import {AuthService} from "./services/auth.service";
 import {ApiService} from "./services/api.service";
 import {faBeerMugEmpty, faUser} from '@fortawesome/free-solid-svg-icons';
 import {Uporabnik} from "./shared/models";
+import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
 
 
 @Component({
@@ -25,12 +26,19 @@ export class AppComponent implements OnInit {
 
     stKart: number;
 
+    isSmallScreen: boolean = false;
+
     constructor(
         private router: Router,
         private keycloakService: KeycloakService,
         protected authService: AuthService,
-        private apiService: ApiService
-    ) {}
+        private apiService: ApiService,
+        private breakpointObserver: BreakpointObserver
+    ) {
+        this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+            this.isSmallScreen = result.matches;
+        });
+    }
 
     ngOnInit() {
         this.authService.checkLoginStatus();
@@ -49,7 +57,6 @@ export class AppComponent implements OnInit {
                 if (uporabnik.role == "zaposlen") {
                     this.jeZaposlen = true;
                 }
-                console.log(this.trenutni_uporabnik);
                 this.loading = false;
             }
         })
@@ -84,7 +91,7 @@ export class AppComponent implements OnInit {
     }
 
     redirectToKeycloak(): void {
-        const keycloakUrl = 'http://localhost:8080/auth/realms/flask-demo/protocol/openid-connect/auth';
+        const keycloakUrl = 'http://localhost:8080/auth/realms/cliMB/protocol/openid-connect/auth';
         const clientId = 'flask';
         const redirectUri = encodeURIComponent('http://localhost:4200/');
         const state = '8b03c486-e1fb-4bc1-88d3-4a0698259956'; // You might want to generate this dynamically

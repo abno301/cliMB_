@@ -1,4 +1,4 @@
-<div *ngIf="!loading" class="flex items-center justify-between h-20 bg-gray-700 text-white px-4 pl-8">
+<div *ngIf="!loading" class="flex items-center justify-between h-20 bg-gray-700 text-white sm:px-4 sm:pl-8">
     <div class="flex items-center space-x-4">
         <a class="flex items-center space-x-2 hover:text-gray-300" routerLink="/" (click)="goHome()">
             <img ngSrc="assets/file_transparent.png" alt="logo" height="50" width="50" class="object-contain">
@@ -7,12 +7,25 @@
                 <span class="text-xl font-bold leading-tight">cliMB</span>
             </div>
         </a>
-        <div class="flex items-center space-x-4">
-            <a class="hover:text-gray-300 font-semibold " routerLink="/" (click)="goPregledProstorov()">Prostori</a>
-            <a class="hover:text-gray-300 font-semibold " routerLink="/" (click)="goNakupKart()">Nakup kart</a>
+
+        <div *ngIf="!isSmallScreen" class="flex items-center space-x-4">
+            <a class="hover:text-gray-300 font-semibold" routerLink="/" (click)="goPregledProstorov()">Prostori</a>
+            <a class="hover:text-gray-300 font-semibold" routerLink="/" (click)="goNakupKart()">Nakup kart</a>
             <a class="hover:text-gray-300 font-semibold" routerLink="/" (click)="goUrnik()">Urniki</a>
             <a class="hover:text-gray-300 font-semibold" routerLink="/" (click)="goPregled()">Pregled</a>
         </div>
+    </div>
+
+    <div *ngIf="isSmallScreen">
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>menu</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="goPregledProstorov()">Prostori</button>
+            <button mat-menu-item (click)="goNakupKart()">Nakup kart</button>
+            <button mat-menu-item (click)="goUrnik()">Urniki</button>
+            <button mat-menu-item (click)="goPregled()">Pregled</button>
+        </mat-menu>
     </div>
 
     <div class="flex items-center space-x-4 mr-4">

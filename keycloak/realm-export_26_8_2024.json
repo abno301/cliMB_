@@ -1,5 +1,5 @@
 {
-  "id": "cliMB",
+  "id": "flask-demo",
   "realm": "cliMB",
   "notBefore": 0,
   "revokeRefreshToken": false,
@@ -48,7 +48,7 @@
         "description": "${role_uma_authorization}",
         "composite": false,
         "clientRole": false,
-        "containerId": "cliMB",
+        "containerId": "flask-demo",
         "attributes": {}
       },
       {
@@ -57,7 +57,7 @@
         "description": "${role_offline-access}",
         "composite": false,
         "clientRole": false,
-        "containerId": "cliMB",
+        "containerId": "flask-demo",
         "attributes": {}
       },
       {
@@ -71,7 +71,7 @@
           ]
         },
         "clientRole": false,
-        "containerId": "cliMB",
+        "containerId": "flask-demo",
         "attributes": {}
       }
     ],
@@ -523,14 +523,14 @@
       "clientId": "account-console",
       "name": "${client_account-console}",
       "rootUrl": "${authBaseUrl}",
-      "baseUrl": "/realms/cliMB/account/",
+      "baseUrl": "/realms/flask-demo/account/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "secret": "**********",
       "redirectUris": [
-        "/realms/cliMB/account/*"
+        "/realms/flask-demo/account/*"
       ],
       "webOrigins": [],
       "notBefore": 0,
@@ -766,6 +766,7 @@
         "http://localhost:4200/*"
       ],
       "webOrigins": [
+        "*",
         "http://localhost:4200"
       ],
       "notBefore": 0,
@@ -780,6 +781,7 @@
       "protocol": "openid-connect",
       "attributes": {
         "saml.assertion.signature": "false",
+        "access.token.lifespan": "600",
         "saml.force.post.binding": "false",
         "saml.multivalued.roles": "false",
         "saml.encrypt": "false",
@@ -1470,6 +1472,7 @@
     "strictTransportSecurity": "max-age=31536000; includeSubDomains"
   },
   "smtpServer": {},
+  "loginTheme": "keycloak",
   "eventsEnabled": false,
   "eventsListeners": [
     "jboss-logging"
@@ -1646,7 +1649,9 @@
     ]
   },
   "internationalizationEnabled": false,
-  "supportedLocales": [],
+  "supportedLocales": [
+    ""
+  ],
   "authenticationFlows": [
     {
       "id": "03d56dfd-055e-4f28-b86e-7fa15c60d43f",

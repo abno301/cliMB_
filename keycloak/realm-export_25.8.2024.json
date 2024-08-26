@@ -766,6 +766,7 @@
         "http://localhost:4200/*"
       ],
       "webOrigins": [
+        "*",
         "http://localhost:4200"
       ],
       "notBefore": 0,
@@ -780,6 +781,7 @@
       "protocol": "openid-connect",
       "attributes": {
         "saml.assertion.signature": "false",
+        "access.token.lifespan": "600",
         "saml.force.post.binding": "false",
         "saml.multivalued.roles": "false",
         "saml.encrypt": "false",
@@ -1470,6 +1472,7 @@
     "strictTransportSecurity": "max-age=31536000; includeSubDomains"
   },
   "smtpServer": {},
+  "loginTheme": "keycloak",
   "eventsEnabled": false,
   "eventsListeners": [
     "jboss-logging"
@@ -1646,7 +1649,9 @@
     ]
   },
   "internationalizationEnabled": false,
-  "supportedLocales": [],
+  "supportedLocales": [
+    ""
+  ],
   "authenticationFlows": [
     {
       "id": "03d56dfd-055e-4f28-b86e-7fa15c60d43f",

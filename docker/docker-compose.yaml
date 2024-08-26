@@ -61,6 +61,7 @@ services:
       - type: "volume"
         source: keycloak-flask-data
         target: /opt/jboss/keycloak/standalone/data
+      - ../keycloak/login.css:/opt/jboss/keycloak/themes/keycloak/login/resources/css/login.css
 volumes:
   keycloak-flask-db-data:
   keycloak-flask-data:
