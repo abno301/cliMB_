@@ -5,11 +5,11 @@
 <div *ngIf="!isSmallScreen" class="container mx-auto p-4 h-screen w-full sm:w-2/3">
   <div class="grid-urnik grid grid-cols-5 gap-4 h-3/5">
     <!-- Column Headers -->
-    <div class="text-center font-bold">PONEDELJEK</div>
-    <div class="text-center font-bold">TOREK</div>
-    <div class="text-center font-bold">SREDA</div>
-    <div class="text-center font-bold">ČETRTEK</div>
-    <div class="text-center font-bold">PETEK</div>
+    <div class="text-center font-bold mt-10">PONEDELJEK</div>
+    <div class="text-center font-bold mt-10">TOREK</div>
+    <div class="text-center font-bold mt-10">SREDA</div>
+    <div class="text-center font-bold mt-10">ČETRTEK</div>
+    <div class="text-center font-bold mt-10">PETEK</div>
 
     <!-- Generate the 5x5 grid -->
     <ng-container *ngFor="let row of rows; let rowIndex = index">
