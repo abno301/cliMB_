@@ -13,7 +13,7 @@ export class AuthService {
     public trenutni_uporabnik: Uporabnik;
 
     constructor(private keycloakService: KeycloakService, private apiService: ApiService) {
-        this.checkLoginStatus();
+        // this.checkLoginStatus();
     }
 
     getToken(): any {
@@ -50,6 +50,7 @@ export class AuthService {
                         letnaKarta: user.letna_karta,
                         veljavnaDo: new Date(user.veljavna_do)
                     };
+                    this.trenutni_uporabnik = trenutni_uporabnik;
                     return of(trenutni_uporabnik);
                 }),
                 catchError(err => {

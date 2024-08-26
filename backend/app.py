@@ -277,7 +277,7 @@ def get_recent_users():
         return jsonify({"error": "No permission"}), 401
 
     recent_users_collection = db['recent_users']
-    recent_users = list(recent_users_collection.find({}, {"_id": 0}))
+    recent_users = list(recent_users_collection.find({}, {"_id": 0}))[::-1]
 
     users_with_images = []
 

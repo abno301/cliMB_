@@ -6,6 +6,7 @@ import {ApiService} from "./services/api.service";
 import {faBeerMugEmpty, faUser} from '@fortawesome/free-solid-svg-icons';
 import {Uporabnik} from "./shared/models";
 import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
+import {concatMap} from "rxjs";
 
 
 @Component({
@@ -41,8 +42,10 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.authService.checkLoginStatus();
-        this.authService.getTrenutniUporabnik().subscribe({
+        // this.authService.checkLoginStatus();
+        this.apiService.checkUsers().pipe(
+            concatMap(() => this.authService.getTrenutniUporabnik())
+        ).subscribe({
             next: (uporabnik) => {
                 let formattedDate;
                 if (uporabnik.veljavnaDo) {
@@ -58,11 +61,11 @@ export class AppComponent implements OnInit {
                     this.jeZaposlen = true;
                 }
                 this.loading = false;
+            },
+            error: (err) => {
+                console.log("Error while checking users or getting user data", err);
+                this.loading = false;
             }
-        })
-        this.apiService.checkUsers().subscribe({
-            next: (_) => console.log("lals"),
-            error: err => console.log("Error while checking users", err)
         });
     }
 
