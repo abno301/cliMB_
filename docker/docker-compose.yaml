@@ -6,7 +6,10 @@ services:
     container_name: climb-api
     command: flask run --host=0.0.0.0 --reload
     environment:
-      - MONGO_URI=mongodb+srv://jernej:FA5Ccw1lHpTTyDy@climb.6ikge.mongodb.net/?retryWrites=true&w=majority&appName=cliMB
+      - MONGO_URI=${MONGO_URI}
+      - STRIPE_API_KEY=${STRIPE_API_KEY}
+      - KEYCLOAK_ADMIN_NAME=${ADMIN_USERNAME}
+      - KEYCLOAK_ADMIN_PASSWORD=${ADMIN_PASSWORD}
     depends_on:
       - mongo
     ports:
@@ -36,8 +39,8 @@ services:
       - 5432:5432
     environment:
       POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: keycloak
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_LOG_LEVEL: ERRORbash
     volumes:
       - type: "volume"
@@ -51,11 +54,11 @@ services:
     ports:
       - 8080:8080
     environment:
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_USER: ${ADMIN_USERNAME}
+      KEYCLOAK_PASSWORD: ${ADMIN_PASSWORD}
       KEYCLOAK_LOGLEVEL: ERROR
-      DB_USER: keycloak
-      DB_PASSWORD: keycloak
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_ADDR: postgres
     volumes:
       - type: "volume"

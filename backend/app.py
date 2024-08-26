@@ -10,21 +10,23 @@ from datetime import datetime, timedelta
 from io import BytesIO
 import base64
 from flask import url_for
+from dotenv import load_dotenv
+import os
 
 app = Flask(__name__)
 CORS(app)
-uri = "mongodb://jernej:FA5Ccw1lHpTTyDy@climb-shard-00-00.6ikge.mongodb.net:27017,climb-shard-00-01.6ikge.mongodb.net:27017,climb-shard-00-02.6ikge.mongodb.net:27017/?ssl=true&replicaSet=atlas-s7hxmc-shard-0&authSource=admin&retryWrites=true&w=majority&appName=cliMB"
+uri = os.getenv('MONGO_URI')
 client = MongoClient(uri)
 db = client['cliMB']
 fs = gridfs.GridFS(db)
 
-stripe.api_key = 'sk_test_51PqU9fJQdsxzu2zOzhTobaEJrOwcSXhwXyepxANo2HZKf2Cv7Go3ZiXoLWOQEqeha5fWH5SOwUtCU14XXuI59OoD00EzHW6hmY'
+stripe.api_key = os.getenv('STRIPE_API_KEY')
 
 KEYCLOAK_SERVER = "http://keycloak:8080/auth"
 REALM_NAME = "master"
 CLIENT_ID = "admin-cli"
-ADMIN_USERNAME = "admin"
-ADMIN_PASSWORD = "admin"
+ADMIN_USERNAME = os.getenv('KEYCLOAK_ADMIN_NAME')
+ADMIN_PASSWORD = os.getenv('KEYCLOAK_ADMIN_PASSWORD')
 
 try:
     client.admin.command('ping')
@@ -54,8 +56,6 @@ def register_user():
                 "role": "uporabnik"
                 })
                 print(f"Inserted {email} into the database.")
-            else:
-                print(f"{email} already exists in the database.")
 
 
     users_to_return = list(db.users.find())
@@ -108,8 +108,6 @@ def get_urnik():
 def update_urnik():
     try:
         dogodki = request.json
-
-        print(dogodki, flush=True)
 
         urnik_doc = db['urnik']
 

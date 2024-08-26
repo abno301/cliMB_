@@ -4,3 +4,4 @@ flask-cors
 pymongo==4.3.3
 pyjwt[crypto]
 stripe
+load_dotenv
