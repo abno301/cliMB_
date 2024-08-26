@@ -1,14 +1,5 @@
 # cliMB
-Upravljalec plezalnih centrov  
+Upravljalec plezalnega centra  
 
-## Setup
-**Https**  
-git clone https://jernejhozjan12@bitbucket.org/climb_project/climb.git  
-
-cd /docker\  
-
-docker compose up --build  
-
-
-**To run seperately:**  
-docker compose up frontend
+## Dokumentacija
+https://climb.gitbook.io/climb
