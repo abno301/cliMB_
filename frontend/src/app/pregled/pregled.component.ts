@@ -26,6 +26,8 @@ export class PregledComponent implements OnInit, OnDestroy {
 
     users: RecentUsers[] = [];
 
+    loading: boolean = true;
+
     constructor(
         private apiService: ApiService,
         public dialog: MatDialog,
@@ -59,7 +61,6 @@ export class PregledComponent implements OnInit, OnDestroy {
                         })
                     )
                 );
-
                 // Fork join pocaka na vse requeste
                 return forkJoin(imageRequests);
             })
@@ -67,8 +68,12 @@ export class PregledComponent implements OnInit, OnDestroy {
             next: (usersWithImages: RecentUsers[]) => {
                 this.users = usersWithImages;
                 this.jeZaposlen = true;
+                this.loading = false;
             },
-            error: (_) => this.jeZaposlen = false
+            error: (_) => {
+                this.jeZaposlen = false;
+                this.loading = false;
+            }
         });
     }
 
