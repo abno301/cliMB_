@@ -1,4 +1,4 @@
-<div *ngIf="!isError && !isSuccess" class="flex flex-col text-center align-middle gap-4 mb-2">
+<div *ngIf="!isError && !isSuccess" class="flex flex-col text-center align-middle gap-4 mb-2 mt-8">
     <h1 class="text-2xl font-bold">cliMB Check-In</h1>
     <span>Želite narediti check-in?</span>
     <button mat-flat-button color="primary" (click)="checkIn()" class="w-fit mx-auto">
@@ -6,7 +6,7 @@
     </button>
 </div>
 
-<div *ngIf="isError" class="flex flex-col text-center align-middle gap-4 mb-2">
+<div *ngIf="isError" class="flex flex-col text-center align-middle gap-4 mb-2 mt-8">
     <h1 class="text-2xl font-bold">Neuspešen check-in!</h1>
     <span>Če želite, lahko kupite karto na spodnji povezavi</span>
     <button mat-flat-button
@@ -17,7 +17,7 @@
     </button>
 </div>
 
-<div *ngIf="isSuccess" class="flex flex-col text-center align-middle gap-4 mb-2">
+<div *ngIf="isSuccess" class="flex flex-col text-center align-middle gap-4 mb-2 mt-8">
     <h1 class="text-2xl font-bold">Uspešen check-in!</h1>
     <span>Lahko nadaljujete v naše prostore!</span>
 </div>

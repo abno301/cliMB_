@@ -25,12 +25,12 @@ export class CheckInComponent implements OnInit {
             next: (info) => {
                 this.isSuccess = true;
                 console.log(info);
-                alert(`${info.success}`);
+                // alert(`${info.success}`);
             },
             error: (error) => {
                 this.isError = true;
                 console.log(error);
-                alert(`${error.error.error}`);
+                // alert(`${error.error.error}`);
             }
         });
     }

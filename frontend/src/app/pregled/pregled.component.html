@@ -1,4 +1,4 @@
-<div *ngIf="jeZaposlen && !loading; else niZaposlen" class="flex flex-col w-4/5 mx-auto">
+<div *ngIf="jeZaposlen && !loading; else niZaposlen" class="flex flex-col w-4/5 mx-auto mt-4">
     <h1 class="text-3xl font-bold mb-4 mx-auto">Pregled Nedavno Prijavljenih Uporabnikov</h1>
     <div class="grid grid-cols-3 gap-4">
         <mat-card *ngFor="let user of users" class="flex flex-col items-center p-4 h-96">
@@ -7,7 +7,7 @@
                 <mat-card-subtitle>Čas prihoda: {{ user.prihod }}</mat-card-subtitle>
             </mat-card-header>
             <mat-card-content class="h-full w-full">
-                <div *ngIf="user.userImageUrl; else noImage" class="h-3/4 w-full flex justify-center items-center">
+                <div *ngIf="user.userImageUrl; else noImage" class="h-3/4 w-full flex justify-center items-center mt-4">
                     <img [src]="user.userImageUrl" alt="User Image" class="h-auto w-auto object-cover max-h-full max-w-full" />
                 </div>
                 <ng-template #noImage>
