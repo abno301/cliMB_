@@ -13,7 +13,7 @@ export class AuthService {
     public trenutni_uporabnik: Uporabnik;
 
     constructor(private keycloakService: KeycloakService, private apiService: ApiService) {
-        // this.checkLoginStatus();
+        this.checkLoginStatus();
     }
 
     getToken(): any {
@@ -22,19 +22,19 @@ export class AuthService {
 
     async checkLoginStatus() {
         this.loggedIn = this.keycloakService.isLoggedIn();
-        if (this.loggedIn) {
-           await this.keycloakService.loadUserProfile();
-           this.apiService.getCurrentUser(this.keycloakService.getUsername()).subscribe({
-               next: user => {
-                   this.trenutni_uporabnik = {
-                       email: user.email,
-                       role: user.role
-                   };
-                   console.log("User is logged in: ", this.trenutni_uporabnik.email);
-               },
-               error: err => this.trenutni_uporabnik = {email: "", role: ""}
-           })
-        } else { this.trenutni_uporabnik = {email: "", role: ""}}
+        // if (this.loggedIn) {
+        //    await this.keycloakService.loadUserProfile();
+        //    this.apiService.getCurrentUser(this.keycloakService.getUsername()).subscribe({
+        //        next: user => {
+        //            this.trenutni_uporabnik = {
+        //                email: user.email,
+        //                role: user.role
+        //            };
+        //            console.log("User is logged in: ", this.trenutni_uporabnik.email);
+        //        },
+        //        error: err => this.trenutni_uporabnik = {email: "", role: ""}
+        //    })
+        // } else { this.trenutni_uporabnik = {email: "", role: ""}}
     }
 
     getTrenutniUporabnik(): Observable<Uporabnik> {
